@@ -28,6 +28,7 @@
             </form>  
         </div>
         <script> 
+            //let highlightSearch
             $(document).ready(function () 
             {
                 $("#grid_id").jqGrid(
@@ -235,18 +236,18 @@
                     defaultSearch: 'cn', 
                     groupOp: 'AND',
                 }), 
-                jQuery("#grid_id").jqGrid('navButtonAdd',"#jqGridPager",
-                {
-                    caption:"Clear",
-                    title:"Clear",
-                    id : "clearFilter",
-                    buttonicon: "ui-icon-plus",
-                    onClickButton:function()
-                    {
-                        activeGrid = undefined
-                        clearFilter()
-                    }
-                }),
+                // jQuery("#grid_id").jqGrid('navButtonAdd',"#jqGridPager",
+                // {
+                //     caption:"Clear",
+                //     title:"Clear",
+                //     id : "clearFilter",
+                //     buttonicon: "ui-icon-plus",
+                //     onClickButton:function()
+                //     {
+                //         activeGrid = undefined
+                //         clearFilter()
+                //     }
+                // }),
                 jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', null,
                 {
                     recreateForm: true,
@@ -265,6 +266,23 @@
                     }
                 }, {
                     recreateForm: true
+                });
+
+                $(document).on('click','#clearFilter',function()
+                {
+                    $('[id*="gs_Invoice"]').val('')
+                    $('#grid_id').jqGrid('setGridParam', {postData: null})
+                    $('#grid_id').jqGrid('setGridParam',
+                    {
+                        postData: 
+                        {
+                            page: 1,
+                            rows: 10,
+                            sidx: 'Invoice',
+                            sord: 'asc',
+                        },
+                    })
+                    .trigger('reloadGrid')
                 });
             });
         </script>
