@@ -28,7 +28,8 @@
             </form>  
         </div>
         <script> 
-            //let highlightSearch
+            let currentSearch
+
             $(document).ready(function () 
             {
                 $("#grid_id").jqGrid(
@@ -208,6 +209,9 @@
                     },
                     loadComplete: function() 
                     {
+                        $(document).unbind('keydown')
+			            customBindKeys()
+
                         setTimeout(function()
                         {
                             $('#gsh_grid_id_rn')
@@ -215,7 +219,14 @@
                                 <button id="clearFilter" title="Clear Filter" style="width: 100%; height: 100%;"> X </button>
                             `).click(function() 
                             {
+                                var grid = $("#grid_id");
+                                // Clear the filter
+                                grid.jqGrid('clearGridData');
+                                grid[0].p.search = false;
+                                $.extend(grid[0].p.postData, {filters: ""});
                                 
+                                // Reload the grid
+                                grid.trigger("reloadGrid");
                             })
                         }) 
                     }
@@ -266,11 +277,16 @@
                     }
                 }, {
                     recreateForm: true
+                }),
+                jQuery("#grid_id").jqGrid('bindKeys', 
+                {
+                    
                 });
 
                 $(document).on('click','#clearFilter',function()
                 {
-                    $('[id*="gs_Invoice"]').val('')
+                    currentSearch = undefined
+                    $('[id*="gs_"]').val('')
                     $('#grid_id').jqGrid('setGridParam', {postData: null})
                     $('#grid_id').jqGrid('setGridParam',
                     {
@@ -285,6 +301,59 @@
                     .trigger('reloadGrid')
                 });
             });
+            
+            function customBindKeys() 
+            {
+                $(document).keydown(function(e) {
+                    if (
+                    e.keyCode == 38 ||
+                    e.keyCode == 40 ||
+                    e.keyCode == 33 ||
+                    e.keyCode == 34 ||
+                    e.keyCode == 35 ||
+                    e.keyCode == 36
+                    ) {
+                    e.preventDefault();
+
+                        if (activeGrid !== undefined) {
+                        var gridArr = $(activeGrid).getDataIDs();
+                        var selrow = $(activeGrid).getGridParam("selrow");
+                        var curr_index = 0;
+                        var currentPage = $(activeGrid).getGridParam('page')
+                            var lastPage = $(activeGrid).getGridParam('lastpage')
+                            var row = $(activeGrid).jqGrid('getGridParam', 'postData').rows
+
+                        for (var i = 0; i < gridArr.length; i++) {
+                            if (gridArr[i] == selrow) curr_index = i;
+                        }
+
+                        switch (e.keyCode) {
+                            case 33:
+                            if (currentPage > 1) {
+                                $(activeGrid).jqGrid('setGridParam', { "page": currentPage - 1 }).trigger('reloadGrid')
+                            }
+                                    break
+                                case 34:
+                            if (currentPage !== lastPage) {
+                                $(activeGrid).jqGrid('setGridParam', { "page": currentPage + 1 }).trigger('reloadGrid')
+                            }
+                            case 38:
+                                if (curr_index - 1 >= 0)
+                            $(activeGrid)
+                                .resetSelection()
+                                .setSelection(gridArr[curr_index - 1])
+                            break
+                            case 40:
+                                if (curr_index + 1 < gridArr.length)
+                            $(activeGrid)
+                                .resetSelection()
+                                .setSelection(gridArr[curr_index + 1])
+                                break
+                            }
+                        }
+                    }
+                })
+            }
         </script>
     </body>
 </html>
