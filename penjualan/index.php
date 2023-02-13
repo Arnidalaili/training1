@@ -30,7 +30,8 @@
         <script> 
             $(document).ready(function () 
             {
-                $("#grid_id").jqGrid({
+                $("#grid_id").jqGrid(
+                {
                     caption: 'Penjualan',
                     datatype: 'json',
                     url: '../api.php',
@@ -40,6 +41,7 @@
                     pageable: true,
                     viewrecords: true,
                     rowNum: 10,
+                    rownumbers: true,
                     autoencode: true,
                     sortable: true,
                     pager : '#jqGridPager',
@@ -203,7 +205,19 @@
                         id: 'Id',
                         repeatitems: false
                     },
-                    loadComplete: function(data){},
+                    loadComplete: function() 
+                    {
+                        setTimeout(function()
+                        {
+                            $('#gsh_grid_id_rn')
+                            .html(`
+                                <button id="clearFilter" title="Clear Filter" style="width: 100%; height: 100%;"> X </button>
+                            `).click(function() 
+                            {
+                                
+                            })
+                        }) 
+                    }
                 });
                 var source =
                 {
@@ -218,10 +232,21 @@
                     searchOnEnter: false,
                     stringResult: true,
                     ignoreCase: true,
-                    defaultSearch: 'cn',
+                    defaultSearch: 'cn', 
                     groupOp: 'AND',
-                    
                 }), 
+                jQuery("#grid_id").jqGrid('navButtonAdd',"#jqGridPager",
+                {
+                    caption:"Clear",
+                    title:"Clear",
+                    id : "clearFilter",
+                    buttonicon: "ui-icon-plus",
+                    onClickButton:function()
+                    {
+                        activeGrid = undefined
+                        clearFilter()
+                    }
+                }),
                 jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', null,
                 {
                     recreateForm: true,
