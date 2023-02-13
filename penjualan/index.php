@@ -28,7 +28,7 @@
             </form>  
         </div>
         <script> 
-            let currentSearch
+            let activeGrid = '#grid_id'
 
             $(document).ready(function () 
             {
@@ -238,18 +238,6 @@
                     defaultSearch: 'cn', 
                     groupOp: 'AND',
                 }), 
-                // jQuery("#grid_id").jqGrid('navButtonAdd',"#jqGridPager",
-                // {
-                //     caption:"Clear",
-                //     title:"Clear",
-                //     id : "clearFilter",
-                //     buttonicon: "ui-icon-plus",
-                //     onClickButton:function()
-                //     {
-                //         activeGrid = undefined
-                //         clearFilter()
-                //     }
-                // }),
                 jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', null,
                 {
                     recreateForm: true,
@@ -268,11 +256,8 @@
                     }
                 }, {
                     recreateForm: true
-                }),
-                // jQuery("#grid_id").jqGrid('bindKeys', 
-                // {
-                    
-                // });
+                })
+                .keyControl(),
 
                 $(document).on('click','#clearFilter',function()
                 {
@@ -306,13 +291,13 @@
                     ) {
                     e.preventDefault();
 
-                        if ('#grid_id' !== undefined) {
-                        var gridArr = $('#grid_id').getDataIDs();
-                        var selrow = $('#grid_id').getGridParam("selrow");
+                        if (activeGrid !== undefined) {
+                        var gridArr = $(activeGrid).getDataIDs();
+                        var selrow = $(activeGrid).getGridParam("selrow");
                         var curr_index = 0;
-                        var currentPage = $('#grid_id').getGridParam('page')
-                            var lastPage = $('#grid_id').getGridParam('lastpage')
-                            var row = $('#grid_id').jqGrid('getGridParam', 'postData').rows
+                        var currentPage = $(activeGrid).getGridParam('page')
+                            var lastPage = $(activeGrid).getGridParam('lastpage')
+                            var row = $(activeGrid).jqGrid('getGridParam', 'postData').rows
 
                         for (var i = 0; i < gridArr.length; i++) {
                             if (gridArr[i] == selrow) curr_index = i;
@@ -321,22 +306,22 @@
                         switch (e.keyCode) {
                             case 33:
                             if (currentPage > 1) {
-                                $('#grid_id').jqGrid('setGridParam', { "page": currentPage - 1 }).trigger('reloadGrid')
+                                $(activeGrid).jqGrid('setGridParam', { "page": currentPage - 1 }).trigger('reloadGrid')
                             }
                                     break
                                 case 34:
                             if (currentPage !== lastPage) {
-                                $('#grid_id').jqGrid('setGridParam', { "page": currentPage + 1 }).trigger('reloadGrid')
+                                $(activeGrid).jqGrid('setGridParam', { "page": currentPage + 1 }).trigger('reloadGrid')
                             }
                             case 38:
                                 if (curr_index - 1 >= 0)
-                            $('#grid_id')
+                            $(activeGrid)
                                 .resetSelection()
                                 .setSelection(gridArr[curr_index - 1])
                             break
                             case 40:
                                 if (curr_index + 1 < gridArr.length)
-                            $('#grid_id')
+                            $(activeGrid)
                                 .resetSelection()
                                 .setSelection(gridArr[curr_index + 1])
                                 break
@@ -344,6 +329,146 @@
                         }
                     }
                 })
+            }
+
+            $.fn.keyControl = function (e) 
+            {
+            var l = $.extend(
+                {
+                onEnter: null,
+                onSpace: null,
+                onLeftKey: null,
+                onRightKey: null,
+                scrollingRows: !0,
+                },
+                e || {}
+            )
+            return this.each(function () {
+                var s = this
+
+                $("body").is("[role]") || $("body").attr("role", "application"),
+                (s.p.scrollrows = l.scrollingRows),
+                $(s)
+                    .on("keydown", function (e) {
+                    var t,
+                        i,
+                        r = $(s).find("tr[tabindex=0]")[0],
+                        o = s.p.treeReader.expanded_field
+
+                    if (r) {
+                        var n = s.p.selrow,
+                        a = s.p._index[$.jgrid.stripPref(s.p.idPrefix, r.id)]
+                                var currentPage = $(s).getGridParam('page')
+                                    var lastPage = $(s).getGridParam('lastpage')
+                                    var row = $(this).jqGrid('getGridParam', 'postData').rows
+
+                        if (
+                        33 === e.keyCode ||
+                        34 === e.keyCode ||
+                        35 === e.keyCode ||
+                        36 === e.keyCode ||
+                        37 === e.keyCode ||
+                        38 === e.keyCode ||
+                        39 === e.keyCode ||
+                        40 === e.keyCode
+                        ) {
+                            if (33 === e.keyCode) {
+                                triggerClick = true
+                                if (currentPage > 1) {
+                                    $(s).jqGrid('setGridParam', { "page": currentPage - 1 }).trigger('reloadGrid')
+                                }
+                            $(s).triggerHandler("jqGridKeyUp", [t, n, e]),
+                            $(this).isFunction(l.onUpKey) && l.onUpKey.call(s, t, n, e),
+                            e.preventDefault()
+                        }
+                            if (34 === e.keyCode) {
+                                triggerClick = true
+                                if (currentPage !== lastPage) {
+                                    $(s).jqGrid('setGridParam', { "page": currentPage + 1 }).trigger('reloadGrid')
+                                }
+                            $(s).triggerHandler("jqGridKeyUp", [t, n, e]),
+                            $(this).isFunction(l.onUpKey) && l.onUpKey.call(s, t, n, e),
+                            e.preventDefault()
+                        }
+                        if (35 === e.keyCode) {
+                            triggerClick = true
+                            if (currentPage !== lastPage) {
+                                $(s).jqGrid('setGridParam', { "page": lastPage}).trigger('reloadGrid')
+                                if (e.ctrlKey) {
+                                    if ($(s).jqGrid('getGridParam', 'selrow') !== $('#grid_id').find(">tbody>tr.jqgrow").filter(":last").attr('id')) {
+                                        $(s).jqGrid('setSelection', $(s).find(">tbody>tr.jqgrow").filter(":last").attr('id')).trigger('reloadGrid')
+                                    }
+                                }
+                            }
+                            if (e.ctrlKey) {
+                                if ($(s).jqGrid('getGridParam', 'selrow') !== $('#grid_id').find(">tbody>tr.jqgrow").filter(":last").attr('id')) {
+                                    $(s).jqGrid('setSelection', $(s).find(">tbody>tr.jqgrow").filter(":last").attr('id')).trigger('reloadGrid')
+                                }
+                            }
+                            $(s).triggerHandler("jqGridKeyUp", [t, n, e]),
+                            $(this).isFunction(l.onUpKey) && l.onUpKey.call(s, t, n, e),
+                            e.preventDefault()
+                        }
+                        if (36 === e.keyCode) {
+                            triggerClick = true
+                            if (e.ctrlKey) {
+                                if ($(s).jqGrid('getGridParam', 'selrow') !== $('#grid_id').find(">tbody>tr.jqgrow").filter(":first").attr('id')) {
+                                    $(s).jqGrid('setSelection', $(s).find(">tbody>tr.jqgrow").filter(":first").attr('id'))
+                                }
+                            }
+                                $(s).jqGrid('setGridParam', { "page": 1}).trigger('reloadGrid')
+                            $(s).triggerHandler("jqGridKeyUp", [t, n, e]),
+                            $(this).isFunction(l.onUpKey) && l.onUpKey.call(s, t, n, e),
+                            e.preventDefault()
+                        }
+                        if (38 === e.keyCode) 
+                        {
+                            
+                            $(s).triggerHandler("jqGridKeyUp", [t, n, e]),
+                            $(this).isFunction(l.onUpKey) && l.onUpKey.call(s, t, n, e),
+                            e.preventDefault()
+                        }
+                        if (40 === e.keyCode) 
+                        {
+                            $(s).triggerHandler("jqGridKeyDown", [t, n, e]),
+                            $(this).isFunction(l.onDownKey) &&
+                                l.onDownKey.call(s, t, n, e),
+                            e.preventDefault()
+                        }
+                        37 === e.keyCode &&
+                            (s.p.treeGrid &&
+                            s.p.data[a][o] &&
+                            $(r).find("div.treeclick").trigger("click"),
+                            $(s).triggerHandler("jqGridKeyLeft", [s.p.selrow, e]),
+                            $(this).isFunction(l.onLeftKey) &&
+                            l.onLeftKey.call(s, s.p.selrow, e)),
+                            39 === e.keyCode &&
+                            (s.p.treeGrid &&
+                                !s.p.data[a][o] &&
+                                $(r).find("div.treeclick").trigger("click"),
+                            $(s).triggerHandler("jqGridKeyRight", [s.p.selrow, e]),
+                            $(this).isFunction(l.onRightKey) &&
+                                l.onRightKey.call(s, s.p.selrow, e))
+                        } else
+                        13 === e.keyCode
+                            ? ($(s).triggerHandler("jqGridKeyEnter", [s.p.selrow, e]),
+                            $(this).isFunction(l.onEnter) &&
+                                l.onEnter.call(s, s.p.selrow, e))
+                            : 32 === e.keyCode &&
+                            ($(s).triggerHandler("jqGridKeySpace", [s.p.selrow, e]),
+                            $(this).isFunction(l.onSpace) &&
+                                l.onSpace.call(s, s.p.selrow, e))
+                    }
+                    })
+                    .on("click", function (e) {
+                    $(e.target).is("input, textarea, select") ||
+                        $(e.target, s.rows).closest("tr.jqgrow").focus()
+                    })
+                })
+            }
+            $.fn.isFunction = function (e) 
+            {
+                return "function" == typeof e
             }
         </script>
     </body>
