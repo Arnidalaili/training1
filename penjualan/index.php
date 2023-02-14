@@ -224,6 +224,10 @@
 
                         setTimeout(function()
                         {
+                            if (indexRow > $('#grid_id').getDataIDs().length - 1) { 
+                                indexRow = $('#grid_id').getDataIDs().length - 1
+                            }
+                            
                             if (triggerClick) {
                                 $('#' + $('#grid_id').getDataIDs()[indexRow]).click()
                                 triggerClick = false
