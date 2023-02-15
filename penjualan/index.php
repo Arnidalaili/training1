@@ -301,9 +301,14 @@
                     beforeShowForm: function(form) 
                     { 
                       $('#Invoice').attr('readonly','readonly');
+                      console.log(form.find('#Invoice').val());
+                      console.log(form.find('#Nama').val());
+                      console.log(form.find('#Tgl').val());
+                      console.log(form.find('#Jeniskelamin').val());
+                      console.log(form.find('#Saldo').val());
                     },
                     serializeRowData: function(postData)
-                    {
+                    { 
                         postData.Invoice = postData.Invoice.toUpperCase();
                         postData.Nama = postData.Nama.toUpperCase();
                         postData.Tgl = postData.Tgl.toUpperCase();

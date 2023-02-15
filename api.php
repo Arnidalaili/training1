@@ -98,9 +98,8 @@
         'message' => 'Success', 
         'page' => $pagenum,  
         'records' => $records, 
-        'total' => $totalpages, 
-	    'data' => $sales, 
-        //'global_search' => 
+        'total' => $totalpages,  
+	    'data' => $sales
 	);
     header('Content-Type: application/json');
 	echo json_encode($response);
