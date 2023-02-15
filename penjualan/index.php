@@ -17,6 +17,13 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
         <script src="https://unpkg.com/autonumeric"></script>
+        <script src="../jqGrid/jqgridjs/highlight/highlight.js" type="text/javascript"></script>
+        <style type="text/css">
+		* 
+            .highlight {
+                background-color: #fbec88;
+            }
+	    </style>
 
         <title>Penjualan</title>
     </head>
@@ -25,15 +32,18 @@
             <form action="" method="post">
                 <table id="grid_id"></table>
                 <div id="jqGridPager"></div>
+                <div id="t_penjualan"></div>
             </form>  
         </div>
         <script> 
             let activeGrid = '#grid_id'
             let triggerClick = true
             let indexRow = 0
-
+            let timeout = null
+            let highlightSearch
+        
             $(document).ready(function () 
-            {
+            {   
                 $("#grid_id").jqGrid(
                 {
                     caption: 'Penjualan',
@@ -44,7 +54,9 @@
                     height: 'auto',
                     pageable: true,
                     viewrecords: true,
+                    ignoreCase: true,
                     rowNum: 10,
+                    toolbar: [true, "top"],
                     rownumbers: true,
                     autoencode: true,
                     sortable: true,
@@ -212,6 +224,7 @@
                     onSelectRow: function(id) 
                     {
                         indexRow = $(this).jqGrid('getCell', id, 'rn') - 1
+
                         page = $(this).jqGrid('getGridParam', 'page') - 1
     	                rows = $(this).jqGrid('getGridParam', 'postData').rows
                         if (indexRow >= rows) indexRow = (indexRow - rows * page)
@@ -224,10 +237,12 @@
 
                         setTimeout(function()
                         {
+                            $('#grid_id tbody tr td:not([aria-describedby=grid_id_rn])').highlight(highlightSearch)
+
                             if (indexRow > $('#grid_id').getDataIDs().length - 1) { 
                                 indexRow = $('#grid_id').getDataIDs().length - 1
                             }
-                            
+
                             if (triggerClick) {
                                 $('#' + $('#grid_id').getDataIDs()[indexRow]).click()
                                 triggerClick = false
@@ -237,16 +252,30 @@
 
                             $('#gsh_grid_id_rn').html(`
                                 <button type="button" id="clearFilter" title="Clear Filter" style="width: 100%; height: 100%;"> X </button>
-                            `).click(function()
+                            `).click(function(){})
+
+                            $('[id*=gs_]').on('input', function() 
                             {
-                                var grid = $("#jqGridPager");
-                                // Clear the filter
-                                grid.jqGrid('clearGridData');
-                                grid[0].p.search = false;
-                                $.extend(grid[0].p.postData, {filters: ""});
-                                // Reload the grid
-                                grid.trigger("reloadGrid");
+                                highlightSearch = $(this).val()
                             })
+
+                            $('#t_grid_id input').on('input', function() 
+                            {
+                                clearTimeout(timeout)
+                                timeout = setTimeout(function()
+                                {
+                                    $('#grid_id').jqGrid('setGridParam', 
+                                    {
+                                        postData: 
+                                        {'global_search': highlightSearch}
+                                    })
+                                    .trigger('reloadGrid')
+                                }, 400)
+                            })
+
+                            $('input')
+                            .css('text-transform', 'uppercase')
+                            .attr('autocomplete', 'off')
                         }) 
                     }
                 });
@@ -265,7 +294,7 @@
                     ignoreCase: true,
                     defaultSearch: 'cn', 
                     groupOp: 'AND',
-                }), 
+                }),
                 jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', null,
                 {
                     recreateForm: true,
@@ -284,7 +313,7 @@
                     }
                 }, {
                     recreateForm: true
-                })
+                }),
 
                 $(document).on('click','#clearFilter',function()
                 {
@@ -302,7 +331,15 @@
                         },
                     })
                     .trigger('reloadGrid')
-                });
+                    highlightSearch = 'undefined'
+                })
+
+                $("#t_grid_id").html(`
+                    <div id="global_search">
+                        <label> Global search </label>
+                        <input id="gs_global_search" class="ui-widget-content ui-corner-all" style="padding: 5px;" globalsearch="true" clearsearch="true">
+                    </div>
+                `)
             });
 
             function setCustomBindKeys(grid) {

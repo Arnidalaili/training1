@@ -1,78 +1,106 @@
 <?php
-    include 'db.php';  
-    $pagenum = $_GET['page']; //page
-    $pagesize = $_GET['rows']; //row per page
-    $sortfield = $_GET['sidx']; //kiriman sorting
-    $sortorder = $_GET['sord']; //asc/desc
-    $start = ($pagenum - 1) * $pagesize; //mulai halaman
+    include 'db.php'; 
+    $pagenum = $_GET['page']; 
+    $pagesize = $_GET['rows']; 
+    $sortfield = $_GET['sidx']; 
+    $sortorder = $_GET['sord']; 
+    $start = ($pagenum - 1) * $pagesize; 
 
-    $query = "SELECT * FROM penjualan"; //query select data
-    $pages = "SELECT COUNT(*) as total FROM penjualan"; //query select total data
+    $query = "SELECT * FROM penjualan"; 
+    $pages = "SELECT COUNT(*) as total FROM penjualan"; 
     
     $filters = [];
     if(isset($_GET['filters'])) {
-        $filters = json_decode($_GET['filters'], true); //mengubah data array menjadi string 
-        $totalfilters = count($filters['rules']); //variabel yang menampung jumlah rules
+        $filters = json_decode($_GET['filters'], true); 
+        $totalfilters = count($filters['rules']); 
         if (isset($filters))
         {
-            for ($i=0; $i<$totalfilters; $i++) //perulangan filter
+            for ($i=0; $i<$totalfilters; $i++) 
             { 
-                $filterdata = $filters['rules'][$i]["data"]; //variabel untuk parameter data di dalam rules
-                $filterfield = $filters['rules'][$i]["field"]; //variabel untuk parameter field di dalam rules
+                $filterdata = $filters['rules'][$i]["data"]; 
+                $filterfield = $filters['rules'][$i]["field"]; 
 
-                if ($filterfield == 'Tgl') //kondisi untuk tanggal, jika field = tanggal 
+                if ($filterfield == 'Tgl')  
                 {
-                    $filterdata = date("Y-m-d", strtotime($filterdata)); //maka format tanggal diubah ke datedatabase
+                    $filterdata = date("Y-m-d", strtotime($filterdata)); 
                 }
 
-                if ($i == 0) //kondisi jika filter cuma 1 field 
+                if ($i == 0) 
                 {
-                    $query .= " WHERE $filterfield LIKE '%$filterdata%'"; //sambungan query untuk select data filter
-                    $pages .= " WHERE $filterfield LIKE '%$filterdata%'"; //sambungan query untuk total data 
+                    $query .= " WHERE $filterfield LIKE '%$filterdata%'"; 
+                    $pages .= " WHERE $filterfield LIKE '%$filterdata%'";  
                 }
-                else if ($i > 0) //kondisi jika filter lebih dari (>) 1
+                else if ($i > 0) 
                 {
-                    $query .= " AND $filterfield LIKE '%$filterdata%'"; //sambungan query untuk select data filter
-                    $pages .= " AND $filterfield LIKE '%$filterdata%'"; //sambungan query untuk total data 
+                    $query .= " AND $filterfield LIKE '%$filterdata%'"; 
+                    $pages .= " AND $filterfield LIKE '%$filterdata%'"; 
                 }
             }
         }
+        
     }
 
-    if (isset($sortfield) && $sortfield != NULL) //kondisi untuk sorting
+    $globalsearch = [];
+    if(isset($_GET['global_search']))
     {   
-        if ($sortorder == 'desc')  //jika sord nya = desc
+        $globalsearch = $_GET['global_search']; 
+        if (isset($globalsearch))
         {
-            $query  .= " ORDER BY $sortfield DESC"; //maka sambungan query select
+            $field = ['Invoice', 'Nama', 'Tgl', 'Jeniskelamin', 'Saldo'];
+            for ($i=0; $i<count($field); $i++)
+            {
+                if ($i == 0)
+                {
+                    $query .= " WHERE $field[$i] LIKE '%$globalsearch%'";
+                    $pages .= " WHERE $field[$i] LIKE '%$globalsearch%'";
+                }
+                else if ($i > 0)
+                {
+                    $query .= " OR $field[$i] LIKE '%$globalsearch%'";
+                    $pages .= " OR $field[$i] LIKE '%$globalsearch%'";
+                }
+            }
         }
-        else if ($sortorder == 'asc') //jika sord = asc
-        {
-            $query .= " ORDER BY $sortfield ASC"; //maka sambungan query select
-        }
-    }
-
-    $pagesquery = mysqli_query($connect, $pages); //
-    $row = mysqli_fetch_assoc($pagesquery);
-    $records = $row; //records
-    $totalpages = ceil($row['total']/$pagesize); //ceil -> membulatkan bilangan keatas , untuk total data/10
-
-    if (isset($pagenum)) // kondisi jika paging
-    {
-        $query .= " LIMIT $start, $pagesize";  //maka sambungan query select
+        // var_dump($query);
+        // die;
     }
     
-    $sales = [];  //array yang menampung data
-    $totalquery = mysqli_query($connect, $query); //variabel pengganti 
-    while ($data=mysqli_fetch_assoc($totalquery)) //perulangban untuk mengambil data
+
+    if (isset($sortfield) && $sortfield != NULL) 
+    {   
+        if ($sortorder == 'desc')  
+        {
+            $query  .= " ORDER BY $sortfield DESC"; 
+        }
+        else if ($sortorder == 'asc') 
+        {
+            $query .= " ORDER BY $sortfield ASC"; 
+        }
+    }
+
+    $pagesquery = mysqli_query($connect, $pages); 
+    $row = mysqli_fetch_assoc($pagesquery);
+    $records = $row; 
+    $totalpages = ceil($row['total']/$pagesize); 
+
+    if (isset($pagenum)) 
     {
-        $sales[] = $data; //data yang sudah diambil, dimasukkan ke dalam variabel data
+        $query .= " LIMIT $start, $pagesize";  
+    }
+
+    $sales = [];  
+    $totalquery = mysqli_query($connect, $query); 
+    while ($data=mysqli_fetch_assoc($totalquery)) 
+    {
+        $sales[] = $data; 
 	}
-    $response = array( //response array 
-        'message' => 'Success', //pesan singkat 
-        'page' => $pagenum, //parameter page 
-        'records' => $records, //parameter records
-        'total' => $totalpages, //parameter total halaman
-	    'data' => $sales, //parameter data yang tampil
+    $response = array(  
+        'message' => 'Success', 
+        'page' => $pagenum,  
+        'records' => $records, 
+        'total' => $totalpages, 
+	    'data' => $sales, 
+        //'global_search' => 
 	);
     header('Content-Type: application/json');
 	echo json_encode($response);
