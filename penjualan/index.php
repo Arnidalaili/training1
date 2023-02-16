@@ -301,12 +301,20 @@
                     beforeShowForm: function(form) 
                     { 
                       $('#Invoice').attr('readonly','readonly');
-                      console.log(form.find('#Invoice').val());
-                      console.log(form.find('#Nama').val());
-                      console.log(form.find('#Tgl').val());
-                      console.log(form.find('#Jeniskelamin').val());
-                      console.log(form.find('#Saldo').val());
+
+                      let invoiceValue = form.find('#Invoice').val();
+                      let namaValue = form.find('#Nama').val();
+                      let tglValue = form.find('#Tgl').val();
+                      let jeniskelaminValue = form.find('#Jeniskelamin').val();
+                      let saldoValue = form.find('#Saldo').val();
+                      
+                      console.log(form.find('#Invoice').val(invoiceValue.replace('<span class="highlight">', '').replace('</span>', '')));
+                      console.log(form.find('#Nama').val(namaValue.replace('<span class="highlight">', '').replace('</span>', '')));
+                      console.log(form.find('#Tgl').val(tglValue.replace('<span class="highlight">', '').replace('</span>', '')));
+                      console.log(form.find('#Jeniskelamin').val(jeniskelaminValue.replace('<span class="highlight">', '').replace('</span>', '')));
+                      console.log(form.find('#Saldo').val(saldoValue.replace('<span class="highlight">', '').replace('</span>', '')));
                     },
+                    
                     serializeRowData: function(postData)
                     { 
                         postData.Invoice = postData.Invoice.toUpperCase();
