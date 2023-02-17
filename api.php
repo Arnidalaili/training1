@@ -61,8 +61,6 @@
                 }
             }
         }
-        // var_dump($query);
-        // die;
     }
     
 
@@ -100,6 +98,7 @@
         'records' => $records, 
         'total' => $totalpages,  
 	    'data' => $sales
+        
 	);
     header('Content-Type: application/json');
 	echo json_encode($response);

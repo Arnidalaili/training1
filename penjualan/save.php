@@ -26,5 +26,8 @@
         $id = $_POST['id'];
         $sql = mysqli_query($connect,"DELETE FROM penjualan WHERE id='$id'");
     }
+
+    $response = ['Invoice' => $invoice];
+    echo json_encode($response);
 ?>  
 

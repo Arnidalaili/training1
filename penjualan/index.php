@@ -266,8 +266,7 @@
                                 {
                                     $('#grid_id').jqGrid('setGridParam', 
                                     {
-                                        postData: 
-                                        {'global_search': highlightSearch}
+                                        postData : {'global_search': highlightSearch}
                                     })
                                     .trigger('reloadGrid')
                                 }, 400)
@@ -314,7 +313,31 @@
                       console.log(form.find('#Jeniskelamin').val(jeniskelaminValue.replace('<span class="highlight">', '').replace('</span>', '')));
                       console.log(form.find('#Saldo').val(saldoValue.replace('<span class="highlight">', '').replace('</span>', '')));
                     },
-                    
+
+                    afterSubmit:function(response, postdata, oper)
+                    {
+                        console.log('tes');
+                        console.log(response);
+                        // $.ajax(
+                        // {
+                        //     url:"aftersave.php",
+                        //     type: "GET",
+                        //     dataType: 'json',
+                        //     data: {
+                        //         name:'tes',
+                        //         invoice:01
+                        //     }
+                        // })
+                        // .done(function(data)
+                        // {
+                        //     var page = ceil($Invoice/$pagesize);
+                        //     var row = $Invoice-$pagesize;
+                        //     alert( page );
+                        //     alert( row );
+                            
+                        // })
+                    },
+
                     serializeRowData: function(postData)
                     { 
                         postData.Invoice = postData.Invoice.toUpperCase();
