@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" media="screen" href="../jqGrid/css/trirand/ui.jqgrid.css" />
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         
-        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
         <script src="../jqGrid/js/trirand/i18n/grid.locale-en.js" type="text/javascript"></script>
         <script src="../jqGrid/js/trirand/jquery.jqGrid.min.js" type="text/javascript"></script>
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -41,6 +41,7 @@
             let indexRow = 0
             let timeout = null
             let highlightSearch
+            let sortName = 'Invoice'
         
             $(document).ready(function () 
             {   
@@ -55,6 +56,7 @@
                     pageable: true,
                     viewrecords: true,
                     ignoreCase: true,
+                    sortname: sortName,
                     rowNum: 10,
                     toolbar: [true, "top"],
                     rownumbers: true,
@@ -313,30 +315,8 @@
                       console.log(form.find('#Jeniskelamin').val(jeniskelaminValue.replace('<span class="highlight">', '').replace('</span>', '')));
                       console.log(form.find('#Saldo').val(saldoValue.replace('<span class="highlight">', '').replace('</span>', '')));
                     },
-
-                    afterSubmit:function(response, postdata, oper)
-                    {
-                        console.log('tes');
-                        console.log(response);
-                        // $.ajax(
-                        // {
-                        //     url:"aftersave.php",
-                        //     type: "GET",
-                        //     dataType: 'json',
-                        //     data: {
-                        //         name:'tes',
-                        //         invoice:01
-                        //     }
-                        // })
-                        // .done(function(data)
-                        // {
-                        //     var page = ceil($Invoice/$pagesize);
-                        //     var row = $Invoice-$pagesize;
-                        //     alert( page );
-                        //     alert( row );
-                            
-                        // })
-                    },
+                    closeAfterEdit: true,
+                    afterSubmit:callAfterSubmit,
 
                     serializeRowData: function(postData)
                     { 
@@ -348,7 +328,9 @@
                         return postData;
                     }
                 }, {
-                    recreateForm: true
+                    recreateForm: true,
+                    closeAfterAdd: true,
+                    afterSubmit:callAfterSubmit
                 }),
 
                 $(document).on('click','#clearFilter',function()
@@ -377,6 +359,35 @@
                     </div>
                 `)
             });
+
+            function callAfterSubmit(response, postData, oper)
+            {
+                sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
+                sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
+                pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
+                $.ajax(
+                {
+                    url:"aftersave.php",
+                    type: "GET",
+                    dataType: 'JSON',  
+                    data: 
+                    {                        
+                        Invoice: JSON.parse(response.responseText).Invoice,
+                        sidx: sortfield,
+                        sord: sortorder
+                    }
+                })
+                .done(function(data)
+                {
+                    $('#cData').click();
+
+                    let posisi = data.position;
+                    let pager = Math.ceil(posisi / pagesize);
+                    let rows = posisi - (pager - 1)* pagesize;
+                    indexRow = rows-1;
+                    $('#grid_id').trigger('reloadGrid', {page:pager});
+                })
+            }
 
             function setCustomBindKeys(grid) {
                 $(document).on("keydown", function (e) {
