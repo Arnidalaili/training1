@@ -315,8 +315,8 @@
                       console.log(form.find('#Jeniskelamin').val(jeniskelaminValue.replace('<span class="highlight">', '').replace('</span>', '')));
                       console.log(form.find('#Saldo').val(saldoValue.replace('<span class="highlight">', '').replace('</span>', '')));
                     },
-                    closeAfterEdit: true,
                     afterSubmit:callAfterSubmit,
+                    reloadAfterSubmit:true,
 
                     serializeRowData: function(postData)
                     { 
@@ -329,8 +329,9 @@
                     }
                 }, {
                     recreateForm: true,
-                    closeAfterAdd: true,
-                    afterSubmit:callAfterSubmit
+                    afterSubmit:callAfterSubmit,
+                    reloadAfterSubmit:true 
+                    //$('#grid_id').dialog('close');
                 }),
 
                 $(document).on('click','#clearFilter',function()
@@ -365,11 +366,9 @@
                 sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
                 sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
                 pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
-                console.log(pagesize);
                 $.ajax(
                 {
                     url:"aftersave.php",
-                    //type: "GET",
                     dataType: 'JSON',  
                     data: 
                     {                        
@@ -381,7 +380,6 @@
                 .done(function(data)
                 {
                     $('#cData').click();
-                    console.log(data);
                     let posisi = data.position;
                     let pager = Math.ceil(posisi / pagesize);
                     let rows = posisi - (pager - 1)* pagesize;
