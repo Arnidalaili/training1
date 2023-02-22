@@ -7,7 +7,7 @@
     $start = ($pagenum - 1) * $pagesize; 
 
     $query = "SELECT * FROM penjualan"; 
-    $pages = "SELECT COUNT(*) as total FROM penjualan"; 
+    $pages = "SELECT SQL_CALC_FOUND_ROWS * FROM penjualan";
     
     $filters = [];
     if(isset($_GET['filters'])) {
@@ -76,10 +76,14 @@
         }
     }
 
-    $pagesquery = mysqli_query($connect, $pages); 
-    $row = mysqli_fetch_assoc($pagesquery);
-    $records = $row; 
-    $totalpages = ceil($row['total']/$pagesize); 
+    $pagesquery = mysqli_query($connect, $pages);
+    $sql = "SELECT FOUND_ROWS() AS 'found_rows';";
+    $rows =  mysqli_query($connect, $sql);
+    $rows = mysqli_fetch_assoc($rows);
+    $records = $rows['found_rows']; 
+    $totalpages = ceil((int)$records/(int)$pagesize); 
+    // var_dump($totalpages);
+    // die;
 
     if (isset($pagenum)) 
     {
