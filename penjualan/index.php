@@ -365,10 +365,11 @@
                 sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
                 sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
                 pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
+                console.log(pagesize);
                 $.ajax(
                 {
                     url:"aftersave.php",
-                    type: "GET",
+                    //type: "GET",
                     dataType: 'JSON',  
                     data: 
                     {                        
@@ -380,13 +381,14 @@
                 .done(function(data)
                 {
                     $('#cData').click();
-
+                    console.log(data);
                     let posisi = data.position;
                     let pager = Math.ceil(posisi / pagesize);
                     let rows = posisi - (pager - 1)* pagesize;
                     indexRow = rows-1;
                     $('#grid_id').trigger('reloadGrid', {page:pager});
                 })
+                
             }
 
             function setCustomBindKeys(grid) {
