@@ -37,7 +37,6 @@
                 }
             }
         }
-        
     }
 
     $globalsearch = [];
@@ -62,7 +61,7 @@
             }
         }
     }
-    
+
 
     if (isset($sortfield) && $sortfield != NULL) 
     {   
@@ -82,8 +81,6 @@
     $rows = mysqli_fetch_assoc($rows);
     $records = $rows['found_rows']; 
     $totalpages = ceil((int)$records/(int)$pagesize); 
-    // var_dump($totalpages);
-    // die;
 
     if (isset($pagenum)) 
     {
@@ -92,9 +89,11 @@
 
     $sales = [];  
     $totalquery = mysqli_query($connect, $query); 
-    while ($data=mysqli_fetch_assoc($totalquery)) 
+    
+     while ($data=mysqli_fetch_assoc($totalquery)) 
     {
         $sales[] = $data; 
+        
 	}
     $response = array(  
         'message' => 'Success', 
@@ -102,8 +101,11 @@
         'records' => $records, 
         'total' => $totalpages,  
 	    'data' => $sales
-        
 	);
+    
+    // $json = json_encode($sales);
+    // $bytes = file_put_contents("reports/demo.json", $json);
+    
     header('Content-Type: application/json');
 	echo json_encode($response);
 ?>

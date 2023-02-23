@@ -331,7 +331,6 @@
                     recreateForm: true,
                     afterSubmit:callAfterSubmit,
                     reloadAfterSubmit:true 
-                    //$('#grid_id').dialog('close');
                 }),
 
                 $(document).on('click','#clearFilter',function()
@@ -351,7 +350,7 @@
                     })
                     .trigger('reloadGrid')
                     highlightSearch = 'undefined'
-                })
+                }),
 
                 $("#t_grid_id").html(`
                     <div id="global_search">
@@ -359,6 +358,59 @@
                         <input id="gs_global_search" class="ui-widget-content ui-corner-all" style="padding: 5px;" globalsearch="true" clearsearch="true">
                     </div>
                 `)
+
+                $('#grid_id').navButtonAdd('#jqGridPager', 
+                {
+                    caption: "",
+                    title: "Report",
+                    id: "penjualanReport",
+                    buttonicon: "ui-icon-document",
+                    onClickButton:function()
+                    {
+                        $('#t_penjualan')
+                            .html(`
+                                <div class="ui-state-default" style="padding: 5px;">
+                                    <h5> Tentukan Baris </h5>
+                                    
+                                    <label> Dari : </label>
+                                    <input type="text" name="start" value="${$(this).getInd($(this).getGridParam('selrow'))}" class="ui-widget-content ui-corner-all autonumeric" style="padding: 5px; text-transform: uppercase;" max="2" required>
+
+                                    <label> Sampai : </label>
+                                    <input type="text" name="limit" value="${$(this).getGridParam('records')}" class="ui-widget-content ui-corner-all autonumeric" style="padding: 5px; text-transform: uppercase;" max="2" required>
+                                </div>
+                            `)
+                            .dialog({
+                                title: "Penjualan Report",
+                                height: 'auto',
+                                width: '500',
+                                position: [0, 1],
+                                buttons: {
+                                    'Report': function() {
+                                        let start = $(this).find('input[name=start]').val()
+                                        let limit = $(this).find('input[name=limit]').val()
+                                        let params
+
+                                        if (parseInt(start) > parseInt(limit)) {
+                                            return alert('Sampai harus lebih besar')
+                                        }
+
+                                        for (var key in postData) {
+                                        if (params != "") {
+                                            params += "&";
+                                        }
+                                        params += key + "=" + encodeURIComponent(postData[key]);
+                                        }
+
+                                        window.open(`reportController.php?${params}&start=${start}&limit=${limit}&sidx=${postData.sidx}&sord=${postData.sord}`)
+                                    },
+                                    'Cancel': function() {
+                                        activeGrid = '#grid_id'
+                                        $(this).dialog('close')
+                                    }
+                                }
+                            })
+                    },
+                })
             });
 
             function callAfterSubmit(response, postData, oper)
