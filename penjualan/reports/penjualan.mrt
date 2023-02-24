@@ -1,10 +1,10 @@
 {
-  "ReportGuid": "7bed2489f0741c2721df4c23a90a499a",
+  "ReportGuid": "d2fe6e3b59ba8ac5d20cc51b6eecadb1",
   "ReportName": "Report",
   "ReportAlias": "Report",
   "ReportFile": "penjualan.mrt",
   "ReportCreated": "/Date(1627101723000+0700)/",
-  "ReportChanged": "/Date(1677143003000+0700)/",
+  "ReportChanged": "/Date(1677232619000+0700)/",
   "EngineVersion": "EngineV2",
   "CalculationMode": "Interpretation",
   "ReportUnit": "Centimeters",
@@ -371,7 +371,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{customers.gender}"
+                "Value": "{root.Saldo}"
               },
               "HorAlignment": "Center",
               "VertAlignment": "Center",
@@ -431,7 +431,7 @@
               "Type": "DataColumn"
             }
           },
-          "DataSourceName": "customers"
+          "DataSourceName": "root"
         },
         "3": {
           "Ident": "StiFooterBand",

@@ -22,6 +22,7 @@
 		$post = mysqli_fetch_assoc($data);
 		$pos = $post['position'];
 		return $pos;
+		
 	}
 	$response = ['Invoice' => $Invoice, 'position' => $position];
     echo json_encode($response);

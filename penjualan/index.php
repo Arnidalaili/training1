@@ -380,7 +380,7 @@
                                 </div>
                             `)
                             .dialog({
-                                title: "Penjualan Report",
+                                title: "Penjualan",
                                 height: 'auto',
                                 width: '500',
                                 position: [0, 1],
