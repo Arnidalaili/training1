@@ -1,1 +1,1 @@
-[{"penjualan":{"penjualan":{"Invoice":"010","Nama":"ERRE","Tgl":"2023-01-29","Id":"243","Jeniskelamin":"LAKI-LAKI","Saldo":"456789.77"}}},{"penjualan":{"penjualan":{"Invoice":"011","Nama":"RNI","Tgl":"2023-01-23","Id":"242","Jeniskelamin":"PEREMPUAN","Saldo":"670000"}}}]
+[{"Invoice":"010","Nama":"ERRE","Tgl":"2023-01-29","Id":"243","Jeniskelamin":"LAKI-LAKI","Saldo":"456789.77"},{"Invoice":"011","Nama":"RNI","Tgl":"2023-01-23","Id":"242","Jeniskelamin":"PEREMPUAN","Saldo":"670000"}]

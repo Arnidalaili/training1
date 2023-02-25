@@ -68,7 +68,7 @@
         
         while ($data=mysqli_fetch_assoc($totalquery)) 
         {
-            $sales[]['penjualan'] = ['penjualan' => $data,]; 
+            $sales[]= $data; 
             
         }
         // $response = array(  
@@ -115,19 +115,18 @@
                 var dataSet = new Stimulsoft.System.Data.DataSet("Data")
                 //alert('test')
                 viewer.renderHtml('content')
-                report.loadFile('./reports/penjualan.mrt')
-
+                report.loadFile('./reports/penjualan(1).mrt')
+                
                 report.dictionary.dataSources.clear()
                 
                 dataSet.readJson(<?php echo json_encode(Report($connect, $pagenum, $pagesize, $sortorder, $sortfield)) ?>)
-
+                console.log(<?php echo json_encode(Report($connect, $pagenum, $pagesize, $sortorder, $sortfield)) ?>)
                 report.regData(dataSet.dataSetName, '', dataSet)
                 report.dictionary.synchronize()
 
                 viewer.report = report
-                designer.renderHtml("content")
-                designer.report = report
-                
+                // designer.renderHtml("content")
+                // designer.report = report
             }
 
             function afterPrint()
@@ -147,5 +146,6 @@
     </head>
     <body onLoad="Start()" onafterprint="afterPrint()">
         <div id="content"></div>
+        
     </body>
 </html>

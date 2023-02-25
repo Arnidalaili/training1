@@ -1,10 +1,10 @@
 {
-  "ReportGuid": "d2fe6e3b59ba8ac5d20cc51b6eecadb1",
+  "ReportGuid": "ae61a0ade1d3b0294619cd6ce55c2ab2",
   "ReportName": "Report",
   "ReportAlias": "Report",
   "ReportFile": "penjualan.mrt",
   "ReportCreated": "/Date(1627101723000+0700)/",
-  "ReportChanged": "/Date(1677232619000+0700)/",
+  "ReportChanged": "/Date(1677301887000+0700)/",
   "EngineVersion": "EngineV2",
   "CalculationMode": "Interpretation",
   "ReportUnit": "Centimeters",
@@ -112,6 +112,25 @@
       "Brush": "solid:",
       "Components": {
         "0": {
+          "Ident": "StiText",
+          "Name": "Text22",
+          "ClientRectangle": "16,27,3,0.6",
+          "ComponentPlacement": "f.ap.FooterBand1",
+          "Interaction": {
+            "Ident": "StiInteraction"
+          },
+          "Text": {
+            "Value": "{PageNofM}"
+          },
+          "HorAlignment": "Center",
+          "VertAlignment": "Center",
+          "Font": ";10;;",
+          "Border": ";;;;;;;solid:0,0,0",
+          "Brush": "solid:",
+          "TextBrush": "solid:0,0,0",
+          "Type": "SystemVariables"
+        },
+        "1": {
           "Ident": "StiReportTitleBand",
           "Name": "ReportTitleBand1",
           "ClientRectangle": "0,0.4,19,1",
@@ -125,7 +144,7 @@
             "0": {
               "Ident": "StiText",
               "Name": "Text1",
-              "ClientRectangle": "0,0,6.8,1",
+              "ClientRectangle": "0,0,8,1",
               "ComponentPlacement": "rt.ReportTitleBand1",
               "Interaction": {
                 "Ident": "StiInteraction"
@@ -141,7 +160,7 @@
             }
           }
         },
-        "1": {
+        "2": {
           "Ident": "StiHeaderBand",
           "Name": "HeaderBand1",
           "ClientRectangle": "0,2.2,19,0.8",
@@ -279,7 +298,7 @@
             }
           }
         },
-        "2": {
+        "3": {
           "Ident": "StiDataBand",
           "Name": "DataBand1",
           "ClientRectangle": "0,3.8,19,0.6",
@@ -304,7 +323,6 @@
               "Text": {
                 "Value": "{root.Invoice}"
               },
-              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Border": ";217,226,243;;;;;;solid:0,0,0",
               "Brush": "solid:255,255,255",
@@ -327,7 +345,6 @@
               "Text": {
                 "Value": "{root.Tgl}"
               },
-              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Border": ";217,226,243;;;;;;solid:0,0,0",
               "Brush": "solid:255,255,255",
@@ -350,7 +367,6 @@
               "Text": {
                 "Value": "{root.Jeniskelamin}"
               },
-              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Border": ";217,226,243;;;;;;solid:0,0,0",
               "Brush": "solid:255,255,255",
@@ -373,7 +389,7 @@
               "Text": {
                 "Value": "{root.Saldo}"
               },
-              "HorAlignment": "Center",
+              "HorAlignment": "Right",
               "VertAlignment": "Center",
               "Border": ";217,226,243;;;;;;solid:0,0,0",
               "Brush": "solid:255,255,255",
@@ -381,7 +397,15 @@
               "TextOptions": {
                 "WordWrap": true
               },
-              "Type": "DataColumn"
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "GroupSeparator": ",",
+                "State": "DecimalSeparator, GroupSeparator, GroupSize, CurrencySymbol",
+                "PositivePattern": 0,
+                "Symbol": "Rp"
+              },
+              "Type": "Expression"
             },
             "4": {
               "Ident": "StiText",
@@ -420,7 +444,6 @@
               "Text": {
                 "Value": "{root.Nama}"
               },
-              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Border": ";217,226,243;;;;;;solid:0,0,0",
               "Brush": "solid:255,255,255",
@@ -433,7 +456,7 @@
           },
           "DataSourceName": "root"
         },
-        "3": {
+        "4": {
           "Ident": "StiFooterBand",
           "Name": "FooterBand1",
           "ClientRectangle": "0,5.2,19,0.6",
@@ -443,27 +466,6 @@
           },
           "Border": ";;;;;;;solid:Black",
           "Brush": "solid:",
-          "Components": {
-            "0": {
-              "Ident": "StiText",
-              "Name": "Text22",
-              "ClientRectangle": "16,0,3,0.6",
-              "ComponentPlacement": "f.ap.FooterBand1",
-              "Interaction": {
-                "Ident": "StiInteraction"
-              },
-              "Text": {
-                "Value": "{PageNofM}"
-              },
-              "HorAlignment": "Center",
-              "VertAlignment": "Center",
-              "Font": ";10;;",
-              "Border": ";;;;;;;solid:0,0,0",
-              "Brush": "solid:",
-              "TextBrush": "solid:0,0,0",
-              "Type": "SystemVariables"
-            }
-          },
           "PrintOnAllPages": true
         }
       },
