@@ -71,12 +71,6 @@
             $sales[]= $data; 
             
         }
-        // $response = array(  
-        //     'message' => 'Success', 
-        //     'page' => $pagenum,  
-        //     'records' => $records,   
-        //     'data' => $sales
-        // );
         
         $json = json_encode($sales);
         $bytes = file_put_contents("./reports/demo.json", $json);
@@ -115,7 +109,7 @@
                 var dataSet = new Stimulsoft.System.Data.DataSet("Data")
                 //alert('test')
                 viewer.renderHtml('content')
-                report.loadFile('./reports/penjualan(1).mrt')
+                report.loadFile('./reports/penjualan(2).mrt')
                 
                 report.dictionary.dataSources.clear()
                 

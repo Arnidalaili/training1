@@ -18,6 +18,7 @@
         <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
         <script src="https://unpkg.com/autonumeric"></script>
         <script src="../jqGrid/jqgridjs/highlight/highlight.js" type="text/javascript"></script>
+        
         <style type="text/css">
 		* 
             .highlight {
@@ -382,8 +383,8 @@
                             .dialog({
                                 title: "Penjualan",
                                 height: 'auto',
-                                width: '500',
-                                position: [0, 1],
+                                width: '400', 
+                                position: [0, 0],
                                 buttons: {
                                     'Report': function() {
                                         let start = $(this).find('input[name=start]').val()

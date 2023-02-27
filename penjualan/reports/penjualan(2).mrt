@@ -1,10 +1,10 @@
 {
-  "ReportGuid": "ae61a0ade1d3b0294619cd6ce55c2ab2",
+  "ReportGuid": "ea1a6964961ab3fb06e6ad7b066b8095",
   "ReportName": "Report",
   "ReportAlias": "Report",
-  "ReportFile": "penjualan.mrt",
+  "ReportFile": "penjualan (1).mrt",
   "ReportCreated": "/Date(1627101723000+0700)/",
-  "ReportChanged": "/Date(1677301887000+0700)/",
+  "ReportChanged": "/Date(1677467381000+0700)/",
   "EngineVersion": "EngineV2",
   "CalculationMode": "Interpretation",
   "ReportUnit": "Centimeters",
@@ -401,7 +401,7 @@
                 "Ident": "StiCurrencyFormatService",
                 "NegativePattern": 0,
                 "GroupSeparator": ",",
-                "State": "DecimalSeparator, GroupSeparator, GroupSize, CurrencySymbol",
+                "State": "DecimalDigits, DecimalSeparator, GroupSeparator, GroupSize, CurrencySymbol",
                 "PositivePattern": 0,
                 "Symbol": "Rp"
               },
