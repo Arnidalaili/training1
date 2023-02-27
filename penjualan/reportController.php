@@ -16,13 +16,43 @@
         $start = $_GET['start'] - 1;
         $limit = $_GET['limit'] - $start;
 
+        $filters = [];
+        if(isset($_GET['filters'])) {
+            $filters = json_decode($_GET['filters'], true); 
+            $totalfilters = count($filters['rules']); 
+            if (isset($filters))
+            {
+                for ($i=0; $i<$totalfilters; $i++) 
+                { 
+                    $filterdata = $filters['rules'][$i]["data"]; 
+                    $filterfield = $filters['rules'][$i]["field"]; 
+
+                    if ($filterfield == 'Tgl')  
+                    {
+                        $filterdata = date("Y-m-d", strtotime($filterdata)); 
+                    }
+
+                    if ($i == 0) 
+                    {
+                        $query .= " WHERE $filterfield LIKE '%$filterdata%'"; 
+                        $pages .= " WHERE $filterfield LIKE '%$filterdata%'";  
+                    }
+                    else if ($i > 0) 
+                    {
+                        $query .= " AND $filterfield LIKE '%$filterdata%'"; 
+                        $pages .= " AND $filterfield LIKE '%$filterdata%'"; 
+                    }
+                }
+            }
+        }
+
         $globalsearch = [];
         if (isset($_GET['global_search']))
         {
             $globalsearch = $_GET['global_search'];
             if(isset($globalsearch))
             {
-                $field = ['Invoice', 'Nama', 'Tgl', 'Jen iskelamin', 'Saldo'];
+                $field = ['Invoice', 'Nama', 'Tgl', 'Jeniskelamin', 'Saldo'];
                 for ($i=0; $i<count($field); $i++)
                 {
                     if ($i == 0)

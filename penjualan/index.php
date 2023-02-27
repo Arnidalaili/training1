@@ -7,6 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" media="screen" href="../jqGrid/css/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="../jqGrid/css/trirand/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="../libraries/themes/redmond/jquery-ui.theme.css"/>
+        <link rel="stylesheet" type="text/css" media="screen" href="../libraries/themes/redmond/jquery-ui.css"/>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         
         <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -24,6 +26,10 @@
             .highlight {
                 background-color: #fbec88;
             }
+        * {
+			font-size: 12px;
+		}
+
 	    </style>
 
         <title>Penjualan</title>
