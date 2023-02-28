@@ -31,7 +31,7 @@
                     {
                         $filterdata = date("Y-m-d", strtotime($filterdata)); 
                     }
-
+                    
                     if ($i == 0) 
                     {
                         $query .= " WHERE $filterfield LIKE '%$filterdata%'"; 
@@ -137,7 +137,8 @@
                 var options = new Stimulsoft.Designer.StiDesignerOptions()
                 var designer = new Stimulsoft.Designer.StiDesigner(options, "Designer", false)
                 var dataSet = new Stimulsoft.System.Data.DataSet("Data")
-                //alert('test')
+                 
+                
                 viewer.renderHtml('content')
                 report.loadFile('./reports/penjualan(2).mrt')
                 

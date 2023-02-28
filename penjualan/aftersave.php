@@ -12,7 +12,7 @@
 		FROM 
 		(
 			SELECT @rownum := @rownum + 1 AS position, penjualan.*
-			FROM penjualan
+			FROM penjualan 
 			JOIN 
 			(
 				SELECT @rownum := 0
@@ -22,7 +22,6 @@
 		$post = mysqli_fetch_assoc($data);
 		$pos = $post['position'];
 		return $pos;
-		
 	}
 	$response = ['Invoice' => $Invoice, 'position' => $position];
     echo json_encode($response);

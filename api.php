@@ -102,10 +102,6 @@
         'total' => $totalpages,  
 	    'data' => $sales
 	);
-    
-    // $json = json_encode($sales);
-    // $bytes = file_put_contents("reports/demo.json", $json);
-    
     header('Content-Type: application/json');
 	echo json_encode($response);
 ?>

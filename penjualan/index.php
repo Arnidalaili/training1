@@ -39,7 +39,8 @@
             <form action="" method="post">
                 <table id="grid_id"></table>
                 <div id="jqGridPager"></div>
-                <div id="t_penjualan"></div>
+                <div id="report_penjualan"></div>
+                <div id="export_penjualan"></div>
             </form>  
         </div>
         <script> 
@@ -374,7 +375,7 @@
                     buttonicon: "ui-icon-document",
                     onClickButton:function()
                     {
-                        $('#t_penjualan')
+                        $('#report_penjualan')
                             .html(`
                                 <div class="ui-state-default" style="padding: 5px;">
                                     <h5> Tentukan Baris </h5>
@@ -392,7 +393,8 @@
                                 width: '400', 
                                 position: [0, 0],
                                 buttons: {
-                                    'Report': function() {
+                                    'Report': function() 
+                                    {
                                         let start = $(this).find('input[name=start]').val()
                                         let limit = $(this).find('input[name=limit]').val()
                                         let params
@@ -410,7 +412,63 @@
 
                                         window.open(`reportController.php?${params}&start=${start}&limit=${limit}&sidx=${postData.sidx}&sord=${postData.sord}`)
                                     },
-                                    'Cancel': function() {
+                                    'Cancel': function() 
+                                    {
+                                        activeGrid = '#grid_id'
+                                        $(this).dialog('close')
+                                    }
+                                }
+                            })
+                    },
+                })
+
+                $('#grid_id').navButtonAdd('#jqGridPager', 
+                {
+                    caption: "",
+                    title: "Export",
+                    id: "penjualanExport",
+                    buttonicon: "ui-icon-document",
+                    onClickButton:function()
+                    {
+                        $('#export_penjualan')
+                            .html(`
+                                <div class="ui-state-default" style="padding: 5px;">
+                                    <h5> Tentukan Baris </h5>
+                                    
+                                    <label> Dari : </label>
+                                    <input type="text" name="start" value="${$(this).getInd($(this).getGridParam('selrow'))}" class="ui-widget-content ui-corner-all autonumeric" style="padding: 5px; text-transform: uppercase;" max="2" required>
+
+                                    <label> Sampai : </label>
+                                    <input type="text" name="limit" value="${$(this).getGridParam('records')}" class="ui-widget-content ui-corner-all autonumeric" style="padding: 5px; text-transform: uppercase;" max="2" required>
+                                </div>
+                            `)
+                            .dialog({
+                                title: "Penjualan",
+                                height: 'auto',
+                                width: '400', 
+                                position: [0, 0],
+                                buttons: {
+                                    'Export': function() 
+                                    {
+                                        let start = $(this).find('input[name=start]').val()
+                                        let limit = $(this).find('input[name=limit]').val()
+                                        let params
+                                        
+                                        if (parseInt(start) > parseInt(limit)) {
+                                            return alert('Sampai harus lebih besar')
+                                        }
+
+                                        for (var key in postData) {
+                                        if (params != "") {
+                                            params += "&";
+                                        }
+                                        params += key + "=" + encodeURIComponent(postData[key]);
+                                        }
+
+                                        window.open(`exportController.php?${params}&start=${start}&limit=${limit}`)
+                                    },
+                                    'Cancel': function() 
+                                    {
                                         activeGrid = '#grid_id'
                                         $(this).dialog('close')
                                     }
@@ -422,9 +480,25 @@
 
             function callAfterSubmit(response, postData, oper)
             {
+                filters = [];
+                if(isset($(this).jqGrid('getGridParam').postData.filters)) 
+                {
+                    $totalfilters = count($filters['rules']); 
+                    if (isset($filters))
+                    {
+                        for ($i=0; $i<$totalfilters; $i++) 
+                        {
+
+                        }
+                    }
+                }
+                filterfield = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[0]['data'];
+                filterdata = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[0]['field'];
+                //filtering = $(this).jqGrid('getGridParam', 'postData'.filters).filters.rules;
                 sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
                 sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
                 pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
+                
                 $.ajax(
                 {
                     url:"aftersave.php",
