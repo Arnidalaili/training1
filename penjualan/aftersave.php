@@ -3,23 +3,48 @@
 	$Invoice = $_GET['Invoice'];
 	$sortfield = $_GET['sidx']; 
     $sortorder = $_GET['sord'];
+	//$filters = $_GET['filter'];
 	
 	$position = getWithPosition($Invoice, $sortfield, $sortorder, $connect);
 	
     function getWithPosition($Invoice, $sortfield, $sortorder, $connect)
 	{
-		$data = mysqli_query($connect, "SELECT temp.position, temp.*
-		FROM 
-		(
-			SELECT @rownum := @rownum + 1 AS position, penjualan.*
-			FROM penjualan 
-			JOIN 
-			(
-				SELECT @rownum := 0
-			) rownum ORDER BY penjualan.$sortfield $sortorder
-		) temp WHERE temp.Invoice = '". $Invoice ."'");
+		$data = "SELECT temp.position, temp.* 
+			FROM (SELECT @rownum := @rownum + 1 AS 
+			position, penjualan.* FROM penjualan 
+			JOIN (SELECT @rownum := 0) rownum" ;
 
-		$post = mysqli_fetch_assoc($data);
+		$filters = [];
+		if(isset($_GET['filter'])) 
+		{
+			$filters = json_decode($_GET['filter'], true);
+			$totalrules = count($filters['rules']); 
+			
+			if (isset($filters))
+			{
+				for ($i=0; $i<$totalrules; $i++) 
+				{	
+					$filterdata = $filters['rules'][$i]["data"];
+					$filterfield = $filters['rules'][$i]["field"];
+
+					if ($i == 0) 
+					{
+						$data .= " WHERE $filterfield LIKE '%$filterdata%'";
+					}
+					else if ($i > 0) 
+					{
+						$data .= " AND $filterfield LIKE '%$filterdata%'";
+					}
+				}
+			}
+		}
+		$data .= " ORDER BY penjualan.$sortfield $sortorder
+				) temp WHERE temp.Invoice = '". $Invoice ."'";
+
+		
+		$filter = mysqli_query($connect, $data);
+
+		$post = mysqli_fetch_assoc($filter);
 		$pos = $post['position'];
 		return $pos;
 	}

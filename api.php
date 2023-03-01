@@ -10,7 +10,8 @@
     $pages = "SELECT SQL_CALC_FOUND_ROWS * FROM penjualan";
     
     $filters = [];
-    if(isset($_GET['filters'])) {
+    if(isset($_GET['filters'])) 
+    {
         $filters = json_decode($_GET['filters'], true); 
         $totalfilters = count($filters['rules']); 
         if (isset($filters))

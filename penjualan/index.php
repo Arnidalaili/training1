@@ -480,21 +480,20 @@
 
             function callAfterSubmit(response, postData, oper)
             {
-                filters = [];
-                if(isset($(this).jqGrid('getGridParam').postData.filters)) 
-                {
-                    $totalfilters = count($filters['rules']); 
-                    if (isset($filters))
-                    {
-                        for ($i=0; $i<$totalfilters; $i++) 
-                        {
+                filters = $(this).jqGrid('getGridParam').postData.filters;
+                filterrules = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules;
 
-                        }
-                    }
-                }
-                filterfield = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[0]['data'];
-                filterdata = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[0]['field'];
-                //filtering = $(this).jqGrid('getGridParam', 'postData'.filters).filters.rules;
+                // if(filters)
+                // {
+                //     totalfilters = filterrules.length;
+                //     let i;
+                //     for(i=0; i<totalfilters; i++)
+                //     {
+                //         filterfield = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[i]['field'];
+                //         filterdata = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[i]['data'];
+                //     }
+                // }
+                
                 sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
                 sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
                 pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
@@ -507,7 +506,9 @@
                     {                        
                         Invoice: JSON.parse(response.responseText).Invoice,
                         sidx: sortfield,
-                        sord: sortorder
+                        sord: sortorder,
+                        filter: filters,
+                        filterules: filterrules
                     }
                 })
                 .done(function(data)
@@ -518,8 +519,7 @@
                     let rows = posisi - (pager - 1)* pagesize;
                     indexRow = rows-1;
                     $('#grid_id').trigger('reloadGrid', {page:pager});
-                })
-                
+                } )
             }
 
             function setCustomBindKeys(grid) {
