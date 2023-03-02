@@ -39,6 +39,10 @@
             <form action="" method="post">
                 <table id="grid_id"></table>
                 <div id="jqGridPager"></div>
+                <div id="penjualan_form"></div>
+                <div id="add"></div>
+                <div id="edit"></div>
+                <div id="delete"></div>
                 <div id="report_penjualan"></div>
                 <div id="export_penjualan"></div>
             </form>  
@@ -167,25 +171,11 @@
                         {
                             name: 'Jeniskelamin',
                             index: 'Jeniskelamin',
-                            sortable: true,
-                            editable: true,
-                            edittype: 'select',
-                            editoptions:
+                            stype: 'select',
+                            searchoptions:
                             {
-                                value: 'Laki-Laki:LAKI-LAKI;Perempuan:PEREMPUAN',
-                                dataInit: function(element) 
-                                {
-                                    $(element).select2(),
-                                    $(element).css('text-transform', 'uppercase')
-                                }
+                                value: ':ALL;1:LAKI-LAKI;2:PEREMPUAN',
                             },
-                            searchoptions: 
-                            {
-                                dataInit: function(element)
-                                {
-                                    $(element).attr('autocomplete', 'off')
-                                }
-						    }
                         },
                         {
                             name: 'Saldo',
@@ -304,8 +294,11 @@
                     defaultSearch: 'cn', 
                     groupOp: 'AND',
                 }),
-                jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', null,
+                jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', 
+                {add:false, edit:false, del:false, search:false,refresh:false},
                 {
+                    
+
                     recreateForm: true,
                     beforeShowForm: function(form) 
                     { 
@@ -369,7 +362,46 @@
 
                 $('#grid_id').navButtonAdd('#jqGridPager', 
                 {
-                    caption: "",
+                    caption: "Add",
+                    title: "Add",
+                    id: "addPenjualan",
+                    buttonicon: "ui-icon-plus",
+                    onClickButton:function()
+                    {
+                        activeGrid = undefined
+                        addPenjualan();
+                    }
+                })
+
+                $('#grid_id').navButtonAdd('#jqGridPager', 
+                {
+                    caption: "Edit",
+                    title: "Edit",
+                    id: "editPenjualan",
+                    buttonicon: "ui-icon-pencil",
+                    onClickButton:function()
+                    {
+                        activeGrid = undefined
+                        editPenjualan();
+                    }
+                })
+
+                $('#grid_id').navButtonAdd('#jqGridPager', 
+                {
+                    caption: "Delete",
+                    title: "Delete",
+                    id: "deletePenjualan",
+                    buttonicon: "ui-icon-trash",
+                    onClickButton:function()
+                    {
+                        activeGrid = undefined
+                        deletePenjualan();
+                    }
+                })
+
+                $('#grid_id').navButtonAdd('#jqGridPager', 
+                {
+                    caption: "Report",
                     title: "Report",
                     id: "penjualanReport",
                     buttonicon: "ui-icon-document",
@@ -424,7 +456,7 @@
 
                 $('#grid_id').navButtonAdd('#jqGridPager', 
                 {
-                    caption: "",
+                    caption: "Export",
                     title: "Export",
                     id: "penjualanExport",
                     buttonicon: "ui-icon-document",
@@ -478,22 +510,54 @@
                 })
             });
 
+            function addPenjualan()
+            {
+                $('#add').load('view/create_add.php', function()
+                {
+                    $.ajax({
+                        url : 'controller/penjualan.php/get_structure()',
+                        type: 'GET',
+                        dataType: 'JSON',
+                        success: function(res) {
+                            res.forEach(function(ei, i) {
+                                $(`input[name=${el.name}`).attr('maxlength', el.max_length)
+                            })
+                        }
+                    })
+                }).dialog({
+                    modal:true,
+                    title: "Add Customer",
+                    height: 'auto',
+                    width: '650',
+                    position: [0, 0],
+                    buttons: {
+                        'Save' : function()
+                        {
+                            $.ajax(
+                            {
+                                url: 'controller/penjualan.php/store',
+                                type: 'POST',
+                                dataType: 'JSON',
+                                data : $('#penjualanaddForm').serializeArray(),
+                                beforeSend: function()
+                                {
+                                    $('#errorBox')
+                                }
+                            })
+                        },
+                        'Cancel' : function() 
+                        {
+                            activeGrid = '#grid_id',
+                            $(this).dialog('close')
+                        }
+                    }
+                })
+            }
+
             function callAfterSubmit(response, postData, oper)
             {
                 filters = $(this).jqGrid('getGridParam').postData.filters;
-                filterrules = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules;
-
-                // if(filters)
-                // {
-                //     totalfilters = filterrules.length;
-                //     let i;
-                //     for(i=0; i<totalfilters; i++)
-                //     {
-                //         filterfield = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[i]['field'];
-                //         filterdata = JSON.parse($(this).jqGrid('getGridParam').postData.filters).rules[i]['data'];
-                //     }
-                // }
-                
+                globals = $(this).jqGrid('getGridParam', 'postData').global_search;
                 sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
                 sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
                 pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
@@ -508,7 +572,7 @@
                         sidx: sortfield,
                         sord: sortorder,
                         filter: filters,
-                        filterules: filterrules
+                        globalsearch: globals,
                     }
                 })
                 .done(function(data)

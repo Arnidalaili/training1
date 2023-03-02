@@ -3,7 +3,6 @@
 	$Invoice = $_GET['Invoice'];
 	$sortfield = $_GET['sidx']; 
     $sortorder = $_GET['sord'];
-	//$filters = $_GET['filter'];
 	
 	$position = getWithPosition($Invoice, $sortfield, $sortorder, $connect);
 	
@@ -38,9 +37,29 @@
 				}
 			}
 		}
+
+		$globalsearch = [];
+		if(isset($_GET['globalsearch']))
+		{   
+			$globalsearch = $_GET['globalsearch']; 
+			if (isset($globalsearch))
+			{
+				$field = ['Invoice', 'Nama', 'Tgl', 'Jeniskelamin', 'Saldo'];
+				for ($i=0; $i<count($field); $i++)
+				{
+					if ($i == 0)
+					{
+						$data .= " WHERE $field[$i] LIKE '%$globalsearch%'";
+					}
+					else if ($i > 0)
+					{
+						$data .= " OR $field[$i] LIKE '%$globalsearch%'";
+					}
+				}
+			}
+		}
 		$data .= " ORDER BY penjualan.$sortfield $sortorder
 				) temp WHERE temp.Invoice = '". $Invoice ."'";
-
 		
 		$filter = mysqli_query($connect, $data);
 
