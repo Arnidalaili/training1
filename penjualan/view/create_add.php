@@ -1,6 +1,3 @@
-<?php 
-    include '../controller/penjualan.php'
-?>
 <style type="text/css">
 	input, select, textarea {
 		text-transform: uppercase;
@@ -42,7 +39,10 @@
                 <label>Jenis Kelamin</label>
             </td>
             <td>
-                <select id="Jeniskelamin" class="FormElement ui-widget-content ui-corner-all" name="Jeniskelamin" required></select>
+                <select id="Jeniskelamin" class="FormElement ui-widget-content ui-corner-all JenisKelamin" name="Jeniskelamin" required>
+                    <option value="1">LAKI-LAKI</option>
+                    <option value="2">PEREMPUAN</option>
+                </select>
             </td>
         </tr>
         <tr>
@@ -50,7 +50,7 @@
                 <label>Saldo</label>
             </td>
             <td>
-                <input type="text" id="Saldo" name="Saldo" class="FormElement ui-widget-content ui-corner-all im-numeric" required autocomplete="off">
+                <input type="text" id="Saldo" name="Saldo" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off">
             </td>
         </tr>
     </table>
@@ -100,6 +100,7 @@
 		setDateFormat()
 		setNumericFormat()
 		formBindKeys()
+        setSelect2()
 	})
 
     function addRow()
@@ -107,13 +108,13 @@
         $('#detailData tbody tr').last().before(`
             <tr>
                 <td>
-                    <input type="text" name="NamaBarang[]" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off">
+                    <input type="text" name="NamaBarang[]" id="namabarang" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off">
                 </td>
                 <td>
-					<input type="text" name="Qty[]" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off">
+					<input type="text" name="Qty[]" id="qty" class="FormElement ui-widget-content ui-corner-all im-numeric" required autocomplete="off">
 				</td>
 				<td>
-					<input type="text" name="Harga[]" class="FormElement ui-widget-content ui-corner-all im-numeric" required autocomplete="off">
+					<input type="text" name="Harga[]" id="harga" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off">
 				</td>
                 <td>
 					<a href="javascript:">
@@ -129,12 +130,16 @@
         $('.Tgl').datepicker({
             dateFormat: 'dd-mm-yy'
         }).inputmask({
-           //mask: "1-2-y",
             inputFormat: "dd-mm-yy",
             //separator: "-",
             alias: "datetime",
             
         })
+    }
+
+    function setSelect2()
+    {
+        $('.JenisKelamin').select2()
     }
 
     function setNumericFormat() {
@@ -153,24 +158,7 @@
 			allowMinus: false,
 			placeholder: '',
         })
-
-        $.ajax({
-            url: 'Jeniskelamin()',
-            type: 'GET',
-            dataType : 'JSON',
-            success: function(res) 
-            {
-                res.forEach(function(el, i) {
-                    $('#Jeniskelamin').append(`
-                        <option value="${el.id_Jeniskelamin}">${el.Jeniskelamin}</option>
-                    `)
-                    $('#Jeniskelamin').select2()
-                })
-            }
-        })
     }
-
-    
 
     function formBindKeys() {
 		let inputs = $('#penjualanaddForm [name]:not(:hidden)')

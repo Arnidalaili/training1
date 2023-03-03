@@ -1,3 +1,7 @@
+<?php
+    include 'penjualan.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     
@@ -171,10 +175,10 @@
                         {
                             name: 'Jeniskelamin',
                             index: 'Jeniskelamin',
-                            stype: 'select',
-                            searchoptions:
+                            //stype: 'select',
+                            edittype:
                             {
-                                value: ':ALL;1:LAKI-LAKI;2:PEREMPUAN',
+                                value: ':LAKI-LAKI;2:PEREMPUAN',
                             },
                         },
                         {
@@ -316,8 +320,8 @@
                       console.log(form.find('#Jeniskelamin').val(jeniskelaminValue.replace('<span class="highlight">', '').replace('</span>', '')));
                       console.log(form.find('#Saldo').val(saldoValue.replace('<span class="highlight">', '').replace('</span>', '')));
                     },
-                    afterSubmit:callAfterSubmit,
-                    reloadAfterSubmit:true,
+                    // afterSubmit:callAfterSubmit,
+                    // reloadAfterSubmit:true,
 
                     serializeRowData: function(postData)
                     { 
@@ -330,8 +334,8 @@
                     }
                 }, {
                     recreateForm: true,
-                    afterSubmit:callAfterSubmit,
-                    reloadAfterSubmit:true 
+                    // afterSubmit:callAfterSubmit,
+                    // reloadAfterSubmit:true 
                 }),
 
                 $(document).on('click','#clearFilter',function()
@@ -514,34 +518,108 @@
             {
                 $('#add').load('view/create_add.php', function()
                 {
+
                     $.ajax({
-                        url : 'controller/penjualan.php/get_structure()',
+                        url : 'penjualan.php',
                         type: 'GET',
-                        dataType: 'JSON',
-                        success: function(res) {
-                            res.forEach(function(ei, i) {
-                                $(`input[name=${el.name}`).attr('maxlength', el.max_length)
-                            })
-                        }
+                        dataType: 'JSON'
+                        // data: 
+                        // {
+                        //     //Invoice: JSON.parse(response.responseText).Invoice
+                        // }
+                    })
+                    .done (function(data) 
+                    {
+                        let field = data.structure;
+                        
                     })
                 }).dialog({
                     modal:true,
-                    title: "Add Customer",
+                    title: "Add Penjualan",
                     height: 'auto',
-                    width: '650',
+                    width: 'auto',
                     position: [0, 0],
                     buttons: {
                         'Save' : function()
                         {
+                            invoice = $('#Invoice').val();
+                            nama = $('#Nama').val();
+                            tgl = $('#Tgl').val();
+                            jeniskelamin = $('#Jeniskelamin').val();
+                            saldo = $('#Saldo').val();
+
+                            datanamabarang = [];
+                            namabarang = $('input[name="NamaBarang[]"]')
+                            .each(function(index,element)
+                            {
+                                datanamabarang= [element.value];
+                            })
+
+                            // totaldetail = $('input[name="NamaBarang[]"]').length;
+                            // for ($i=0; $i<totaldetail; $i++)
+                            // {
+                            //     namabarang = $('[name = "NamaBarang[$i]"]').val();
+                            //     qty = $('[name = "Qty[$i]"]').val();
+                            //     harga = $('[name = "Harga[$i]"]').val();
+                            //     console.log(harga);
+                            // }
+                            //for 
+
+                            //$( "input[name='first_name']" );
+                            // qty = $(name = 'Qty[]').val();
+                            // harga = $(name = 'Harga[]').val();
+                            
+                            console.log(datanamabarang);
                             $.ajax(
                             {
-                                url: 'controller/penjualan.php/store',
+                                url: 'save.php',
                                 type: 'POST',
                                 dataType: 'JSON',
-                                data : $('#penjualanaddForm').serializeArray(),
-                                beforeSend: function()
+                                data : 
                                 {
-                                    $('#errorBox')
+                                    operadd: 'add',
+                                    operedit: 'edit',
+                                    operdel: 'del',
+                                    Invoice: invoice,
+                                    Nama: nama,
+                                    Tgl: tgl,
+                                    Jeniskelamin: jeniskelamin, 
+                                    Saldo: saldo,
+                                    Namabarang: namabarang,
+                                    Qty: qty,
+                                    Harga: harga
+                                },
+                            }).done(function(data)
+                            {
+                                if (data.status == 'submitted') 
+                                {
+                                    $('#add').dialog('close') 
+
+                                    filters = $(this).jqGrid('getGridParam').postData.filters;
+                                    globals = $(this).jqGrid('getGridParam', 'postData').global_search;
+                                    sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
+                                    sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
+                                    pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
+                                    $.ajax({
+                                        url:"aftersave.php",
+                                        dataType: 'JSON',  
+                                        data: 
+                                        {                        
+                                            Invoice: JSON.parse(response.responseText).Invoice,
+                                            sidx: sortfield,
+                                            sord: sortorder,
+                                            filter: filters,
+                                            globalsearch: globals,
+                                        }
+                                    }).done(function(data)
+                                    {
+                                        $('#cData').click();
+                                        let posisi = data.position;
+                                        let pager = Math.ceil(posisi / pagesize);
+                                        let rows = posisi - (pager - 1)* pagesize;
+                                        indexRow = rows-1;
+                                        $('#grid_id').trigger('reloadGrid', {page:pager});
+                                    })
                                 }
                             })
                         },
@@ -554,37 +632,37 @@
                 })
             }
 
-            function callAfterSubmit(response, postData, oper)
-            {
-                filters = $(this).jqGrid('getGridParam').postData.filters;
-                globals = $(this).jqGrid('getGridParam', 'postData').global_search;
-                sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
-                sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
-                pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
+            // function callAfterSubmit(response, postData, oper)
+            // {
+            //     filters = $(this).jqGrid('getGridParam').postData.filters;
+            //     globals = $(this).jqGrid('getGridParam', 'postData').global_search;
+            //     sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
+            //     sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
+            //     pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
                 
-                $.ajax(
-                {
-                    url:"aftersave.php",
-                    dataType: 'JSON',  
-                    data: 
-                    {                        
-                        Invoice: JSON.parse(response.responseText).Invoice,
-                        sidx: sortfield,
-                        sord: sortorder,
-                        filter: filters,
-                        globalsearch: globals,
-                    }
-                })
-                .done(function(data)
-                {
-                    $('#cData').click();
-                    let posisi = data.position;
-                    let pager = Math.ceil(posisi / pagesize);
-                    let rows = posisi - (pager - 1)* pagesize;
-                    indexRow = rows-1;
-                    $('#grid_id').trigger('reloadGrid', {page:pager});
-                } )
-            }
+            //     $.ajax(
+            //     {
+            //         url:"aftersave.php",
+            //         dataType: 'JSON',  
+            //         data: 
+            //         {                        
+            //             Invoice: JSON.parse(response.responseText).Invoice,
+            //             sidx: sortfield,
+            //             sord: sortorder,
+            //             filter: filters,
+            //             globalsearch: globals,
+            //         }
+            //     })
+            //     .done(function(data)
+            //     {
+            //         $('#cData').click();
+            //         let posisi = data.position;
+            //         let pager = Math.ceil(posisi / pagesize);
+            //         let rows = posisi - (pager - 1)* pagesize;
+            //         indexRow = rows-1;
+            //         $('#grid_id').trigger('reloadGrid', {page:pager});
+            //     } )
+            // }
 
             function setCustomBindKeys(grid) {
                 $(document).on("keydown", function (e) {

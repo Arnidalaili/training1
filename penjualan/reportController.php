@@ -142,7 +142,7 @@
                 viewer.renderHtml('content')
                 report.loadFile('./reports/penjualan(2).mrt')
                 
-                report.dictionary.dataSources.clear()
+                report.dictionary.dataSources.clear() 
                 
                 dataSet.readJson(<?php echo json_encode(Report($connect, $pagenum, $pagesize, $sortorder, $sortfield)) ?>)
                 console.log(<?php echo json_encode(Report($connect, $pagenum, $pagesize, $sortorder, $sortfield)) ?>)
