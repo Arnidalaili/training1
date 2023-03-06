@@ -1,5 +1,5 @@
 <?php
-    include 'penjualan.php';
+    include 'datastructure.php';
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +49,8 @@
                 <div id="delete"></div>
                 <div id="report_penjualan"></div>
                 <div id="export_penjualan"></div>
+                <table id="grid_detail"></table>
+                <div id="jqGridPagerDetail"></div>
             </form>  
         </div>
         <script> 
@@ -301,8 +303,6 @@
                 jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', 
                 {add:false, edit:false, del:false, search:false,refresh:false},
                 {
-                    
-
                     recreateForm: true,
                     beforeShowForm: function(form) 
                     { 
@@ -514,24 +514,98 @@
                 })
             });
 
+            $(document).ready(function () 
+            {   
+                $("#grid_detail").jqGrid(
+                {
+                    caption: ' Detail Penjualan',
+                    datatype: 'json',
+                    url: '../apidetail.php',
+                    styleUI: 'jQueryUI',
+                    width: 'auto',
+                    height: 'auto',
+                    pageable: true,
+                    sortname: sortName,
+                    rowNum: 10,
+                    toolbar: [true, "top"],
+                    rownumbers: true,
+                    autoencode: true,
+                    sortable: true,
+                    pager : '#jqGridPagerDetail',
+                    colNames: ['ID', 'Nama Barang', 'Qty', 'Harga'],
+                    colModel: 
+                    [
+                        {
+                            name: 'Id',
+                            sortable: true,
+                            hidden: true,
+                            key: true,
+                            editable: true
+                        },
+                        {
+                            name: 'Harga',
+                            index: 'Harga',
+                            sortable: true,
+                            editable: true,
+                            editoptions:
+                            {
+                                dataInit: function(element) 
+                                {
+                                    $(element).attr('autocomplete', 'off'),
+                                    $(element).css('text-transform', 'uppercase')
+                                }
+                            }
+                        },
+                        {
+                            name: 'Qty',
+                            index: 'Qty',
+                            sortable: true,
+                            editable: true,
+                            editoptions:
+                            {
+                                dataInit: function(element) 
+                                {
+                                    $(element).attr('autocomplete', 'off'),
+                                    $(element).css('text-transform', 'uppercase')
+                                }
+                            }
+                        },
+                        {
+                            name: 'Harga',
+                            index: 'Harga',
+                            sortable: true,
+                            editable: true,
+                            editoptions:
+                            {
+                                dataInit: function(element) 
+                                {
+                                    $(element).attr('autocomplete', 'off'),
+                                    $(element).css('text-transform', 'uppercase')
+                                }
+                            }
+                        }
+                    ]
+                })
+            })
+
             function addPenjualan()
             {
                 $('#add').load('view/create_add.php', function()
                 {
 
                     $.ajax({
-                        url : 'penjualan.php',
+                        url : 'datastructure.php',
                         type: 'GET',
                         dataType: 'JSON'
-                        // data: 
-                        // {
-                        //     //Invoice: JSON.parse(response.responseText).Invoice
-                        // }
                     })
-                    .done (function(data) 
+                    .done (function(res) 
                     {
-                        let field = data.structure;
-                        
+                        // res.each(function(element, i)
+                        // {
+                        //     $(`input[name=${element.name}]`).attr('maxlength', element.max_length)
+                        // })
+                        let field = res.structure;
+
                     })
                 }).dialog({
                     modal:true,
@@ -549,27 +623,29 @@
                             saldo = $('#Saldo').val();
 
                             datanamabarang = [];
-                            namabarang = $('input[name="NamaBarang[]"]')
+                            namabarang = $(`input[name="Harga[]"]`)
                             .each(function(index,element)
                             {
-                                datanamabarang= [element.value];
+                                datanama = element.value;
+                                datanamabarang.push(element.value);
                             })
 
-                            // totaldetail = $('input[name="NamaBarang[]"]').length;
-                            // for ($i=0; $i<totaldetail; $i++)
-                            // {
-                            //     namabarang = $('[name = "NamaBarang[$i]"]').val();
-                            //     qty = $('[name = "Qty[$i]"]').val();
-                            //     harga = $('[name = "Harga[$i]"]').val();
-                            //     console.log(harga);
-                            // }
-                            //for 
+                            dataqtybarang = [];
+                            qty = $(`input[name="Qty[]"]`)
+                            .each(function(index,element)
+                            {
+                                dataqty = element.value; 
+                                dataqtybarang.push(element.value);
+                            })
 
-                            //$( "input[name='first_name']" );
-                            // qty = $(name = 'Qty[]').val();
-                            // harga = $(name = 'Harga[]').val();
-                            
-                            console.log(datanamabarang);
+                            datahargabarang = [];
+                            harga = $(`input[name="Harga[]"]`)
+                            .each(function(index,element)
+                            {
+                                dataharga = element.value;
+                                datahargabarang.push(element.value);
+                            });
+
                             $.ajax(
                             {
                                 url: 'save.php',
@@ -578,48 +654,21 @@
                                 data : 
                                 {
                                     operadd: 'add',
-                                    operedit: 'edit',
-                                    operdel: 'del',
-                                    Invoice: invoice,
-                                    Nama: nama,
-                                    Tgl: tgl,
-                                    Jeniskelamin: jeniskelamin, 
-                                    Saldo: saldo,
-                                    Namabarang: namabarang,
-                                    Qty: qty,
-                                    Harga: harga
+                                    Invoice : invoice, 
+                                    Nama : nama,
+                                    Tgl : tgl,
+                                    Jeniskelamin : jeniskelamin,
+                                    Saldo : saldo,
+                                    Namabarang: datanamabarang,
+                                    Qty: dataqtybarang,
+                                    Harga: datahargabarang
                                 },
                             }).done(function(data)
                             {
                                 if (data.status == 'submitted') 
                                 {
-                                    $('#add').dialog('close') 
-
-                                    filters = $(this).jqGrid('getGridParam').postData.filters;
-                                    globals = $(this).jqGrid('getGridParam', 'postData').global_search;
-                                    sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
-                                    sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
-                                    pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
-                                    $.ajax({
-                                        url:"aftersave.php",
-                                        dataType: 'JSON',  
-                                        data: 
-                                        {                        
-                                            Invoice: JSON.parse(response.responseText).Invoice,
-                                            sidx: sortfield,
-                                            sord: sortorder,
-                                            filter: filters,
-                                            globalsearch: globals,
-                                        }
-                                    }).done(function(data)
-                                    {
-                                        $('#cData').click();
-                                        let posisi = data.position;
-                                        let pager = Math.ceil(posisi / pagesize);
-                                        let rows = posisi - (pager - 1)* pagesize;
-                                        indexRow = rows-1;
-                                        $('#grid_id').trigger('reloadGrid', {page:pager});
-                                    })
+                                    $('#add').dialog('close');
+                                    callAfterSubmit();
                                 }
                             })
                         },
@@ -632,37 +681,36 @@
                 })
             }
 
-            // function callAfterSubmit(response, postData, oper)
-            // {
-            //     filters = $(this).jqGrid('getGridParam').postData.filters;
-            //     globals = $(this).jqGrid('getGridParam', 'postData').global_search;
-            //     sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
-            //     sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
-            //     pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
-                
-            //     $.ajax(
-            //     {
-            //         url:"aftersave.php",
-            //         dataType: 'JSON',  
-            //         data: 
-            //         {                        
-            //             Invoice: JSON.parse(response.responseText).Invoice,
-            //             sidx: sortfield,
-            //             sord: sortorder,
-            //             filter: filters,
-            //             globalsearch: globals,
-            //         }
-            //     })
-            //     .done(function(data)
-            //     {
-            //         $('#cData').click();
-            //         let posisi = data.position;
-            //         let pager = Math.ceil(posisi / pagesize);
-            //         let rows = posisi - (pager - 1)* pagesize;
-            //         indexRow = rows-1;
-            //         $('#grid_id').trigger('reloadGrid', {page:pager});
-            //     } )
-            // }
+            function callAfterSubmit()
+            {
+                filters = $(this).jqGrid('getGridParam').postData.filters;
+                console.log(filters);
+
+                globals = $(this).jqGrid('getGridParam', 'postData').global_search;
+                sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
+                sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
+                pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
+                $.ajax({
+                    url:"aftersave.php",
+                    dataType: 'JSON',  
+                    data: 
+                    {                        
+                        Invoice: JSON.parse(response.responseText).Invoice,
+                        sidx: sortfield,
+                        sord: sortorder,
+                        filter: filters,
+                        globalsearch: globals,
+                    }
+                }).done(function(data)
+                {
+                    $('#cData').click();
+                    let posisi = data.position;
+                    let pager = Math.ceil(posisi / pagesize);
+                    let rows = posisi - (pager - 1)* pagesize;
+                    indexRow = rows-1;
+                    $('#grid_id').trigger('reloadGrid', {page:pager});
+                })
+            }
 
             function setCustomBindKeys(grid) {
                 $(document).on("keydown", function (e) {

@@ -14,5 +14,5 @@
         return $field;
     }
     $response = ['structure' => $field];
-    echo json_encode($response); 
+    //echo json_encode($response); 
 ?>

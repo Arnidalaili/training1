@@ -1,6 +1,6 @@
 <style type="text/css">
 	input, select, textarea {
-		text-transform: uppercase;
+		text-transform: UPPERCASE;
 		padding: 5px;
 	}
 
@@ -131,7 +131,6 @@
             dateFormat: 'dd-mm-yy'
         }).inputmask({
             inputFormat: "dd-mm-yy",
-            //separator: "-",
             alias: "datetime",
             
         })
