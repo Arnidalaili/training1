@@ -90,8 +90,7 @@
 
     $sales = [];  
     $totalquery = mysqli_query($connect, $query); 
-    
-     while ($data=mysqli_fetch_assoc($totalquery)) 
+    while ($data=mysqli_fetch_assoc($totalquery)) 
     {
         $sales[] = $data; 
         

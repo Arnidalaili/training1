@@ -60,9 +60,9 @@
 		}
 		$data .= " ORDER BY penjualan.$sortfield $sortorder
 				) temp WHERE temp.Invoice = '". $Invoice ."'";
-		
-		$filter = mysqli_query($connect, $data);
 
+		$filter = mysqli_query($connect, $data);
+		
 		$post = mysqli_fetch_assoc($filter);
 		$pos = $post['position'];
 		return $pos;

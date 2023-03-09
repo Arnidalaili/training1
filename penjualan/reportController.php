@@ -4,10 +4,8 @@
     $pagesize = $_GET['rows']; 
     $sortfield = $_GET['sidx']; 
     $sortorder = $_GET['sord']; 
-    
-    
+
     Report($connect, $pagenum, $pagesize, $sortorder, $sortfield);
-    
 
     function Report($connect, $pagenum, $pagesize, $sortorder, $sortfield)
     {
@@ -99,7 +97,6 @@
         while ($data=mysqli_fetch_assoc($totalquery)) 
         {
             $sales[]= $data; 
-            
         }
         
         $json = json_encode($sales);
@@ -107,8 +104,6 @@
 
         return $sales;
     }
-    // var_dump('test');
-    // die;
     require "reports/stireport_config.inc"; 
 ?>
 

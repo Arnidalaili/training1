@@ -5,14 +5,22 @@
 	}
 
 </style>
-<form id="penjualanaddForm">
-    <table width="100%" cellspacing="0" id="addData">
+<form id="penjualaneditForm">
+    <?php
+        include('../../db.php');
+        $Invoice = $_GET['Invoice'];
+        $query = mysqli_query($connect,"SELECT * from penjualan WHERE Invoice='$Invoice'");
+        $data = mysqli_fetch_assoc($query);
+        $tgl = $data['Tgl'];
+        $newtgl = date("d-m-Y", strtotime($tgl));
+    ?>
+    <table width="100%" cellspacing="0" id="editData">
         <tr>
             <td>
                 <label>No.Invoice</label>
             </td>
             <td>
-                <input type="text" id="Invoice" name="Invoice" class="FormElement ui-widget-content ui-corner-all autofocus" autofocus autocomplete="off">
+                <input type="text" id="Invoice" name="Invoice" class="FormElement ui-widget-content ui-corner-all autofocus" autofocus autocomplete="off" readonly value="<?php echo $data['Invoice'];?>">
             </td>
         </tr>
         <tr>
@@ -20,7 +28,7 @@
                 <label>Nama Customer</label>
             </td>
             <td>
-                <input type="text" id="Nama" name="Nama" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off">
+                <input type="text" id="Nama" name="Nama" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off" value="<?php echo $data['Nama'];?>">
             </td>
         </tr>
         <tr>
@@ -28,7 +36,7 @@
                 <label>Tanggal Pembelian</label>
             </td>
             <td>
-                <input type="text" id="Tgl" name="Tgl" class="FormElement ui-widget-content ui-corner-all setDate" required autocomplete="off" maxlength="10">
+                <input type="text" id="Tgl" name="Tgl" class="FormElement ui-widget-content ui-corner-all setDate" required autocomplete="off" maxlength="10" value="<?php echo $newtgl;?>"> 
             </td>
         </tr>
         <tr>
@@ -36,7 +44,7 @@
                 <label>Jenis Kelamin</label>
             </td>
             <td>
-                <select id="Jeniskelamin" class="FormElement ui-widget-content ui-corner-all JenisKelamin" name="Jeniskelamin" required>
+                <select id="Jeniskelamin" class="FormElement ui-widget-content ui-corner-all JenisKelamin" name="Jeniskelamin" required value="<?php echo $data['Jeniskelamin'];?>">
                     <option value="1">LAKI-LAKI</option>
                     <option value="2">PEREMPUAN</option>
                 </select>
@@ -47,12 +55,14 @@
                 <label>Saldo</label>
             </td>
             <td>
-                <input type="text" id="Saldo" name="Saldo" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off">
+                <input type="text" id="Saldo" name="Saldo" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off" value="<?php echo $data['Saldo'];?>">
             </td>
         </tr>
     </table>
+    
     <br>
     <table width="100%" class="table ui-state-default" cellpading="5" cellspacing="0" id="detailData">
+        
         <thead>
 			<tr>
 				<th class="ui-th-div">Nama Barang</th>
@@ -62,22 +72,31 @@
 			</tr>
 		</thead>
         <tbody>
-            <tr>
-                <td>
-                    <input type="text" name="NamaBarang[]" id="namabarang" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off">
-                </td>
-                <td>
-                    <input type="text" name="Qty[]" id="qty" class="FormElement ui-widget-content ui-corner-all im-numeric" required autocomplete="off">
-                </td>
-                <td>
-                    <input type="text" name="Harga[]" id="harga" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off">
-                </td>
-                <td>
-					<a href="javascript:">
-						<span class="ui-icon ui-icon-trash" onclick="$(this).parent().parent().parent().remove()"></span>
-					</a>
-				</td>
-            </tr>
+            <?php
+                $querydetail = mysqli_query($connect,"SELECT * from detailpenjualan WHERE Invoice='$Invoice'");
+                while($datadetail = mysqli_fetch_assoc($querydetail))
+                {
+                ?>
+                    <tr>
+                        <td>
+                            <input type="text" name="NamaBarang[]" id="namabarang" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off" value="<?php echo $datadetail['NamaBarang'];?>">
+                        </td>
+                        <td>
+                            <input type="text" name="Qty[]" id="qty" class="FormElement ui-widget-content ui-corner-all im-numeric" required autocomplete="off" value="<?php echo $datadetail['Qty'];?>">
+                        </td>
+                        <td>
+                            <input type="text" name="Harga[]" id="harga" class="FormElement ui-widget-content ui-corner-all im-currency" required autocomplete="off" value="<?php echo $datadetail['Harga'];?>">
+                        </td>
+                        <td>
+                            <a href="javascript:">
+                                <span class="ui-icon ui-icon-trash" onclick="$(this).parent().parent().parent().remove()"></span>
+                            </a>
+                        </td>
+                    </tr>
+            <?php
+                }
+            ?>
+            
             <tr>
 				<td colspan="3"></td>
 				<td>
@@ -106,6 +125,7 @@
         $('.autofocus').focus();
     }
 
+
     function addRow()
     {
         $('#detailData tbody tr').last().before(`
@@ -131,12 +151,13 @@
     function setDateFormat() 
     {
         $('.setDate').datepicker({
-			dateFormat: 'dd-mm-yy',
-		}).inputmask({
-			alias: "datetime",
+            dateFormat: 'dd-mm-yy',
+        }).inputmask({
+            //inputFormat: "dd-mm-yy"
+            alias: "datetime",
             mask: "1-2-y",
-            separator: "-"
-		})
+            separator: "-",
+        })
     }
 
     function setSelect2()

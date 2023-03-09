@@ -46,7 +46,7 @@
                 <div id="penjualan_form"></div>
                 <div id="add"></div>
                 <div id="edit"></div>
-                <div id="delete"></div>
+                <div id="del"></div>
                 <div id="report_penjualan"></div>
                 <div id="export_penjualan"></div>
                 <table id="grid_detail"></table>
@@ -126,14 +126,7 @@
                                     $(element).attr('autocomplete', 'off'),
                                     $(element).css('text-transform', 'uppercase')
                                 }
-                            },
-                            searchoptions: 
-                            {
-                                dataInit: function(element) 
-                                {
-                                    $(element).attr('autocomplete', 'off')
-                                }
-						    }
+                            }
                         },
                         {
                             name: 'Tgl',
@@ -170,14 +163,14 @@
                             {
                                 dataInit: function(element)
                                 {
-                                    $(element).attr('autocomplete', 'off')
+                                    $(element).attr('autocomplete', 'off'),
+                                    $(element).css('text-transform', 'uppercase')
                                 }
 						    }
                         },
                         {
                             name: 'Jeniskelamin',
                             index: 'Jeniskelamin',
-                            //stype: 'select',
                             edittype:
                             {
                                 value: ':LAKI-LAKI;2:PEREMPUAN',
@@ -193,6 +186,7 @@
                             {
                                 dataInit: function(element) 
                                 {
+                                    $(element).css('text-transform', 'uppercase'),
                                     element.style.textAlign = 'right',
                                     $(element).attr('autocomplete', 'off'),
                                     new AutoNumeric(element,
@@ -216,7 +210,8 @@
                             {
                                 dataInit: function(element)
                                 {
-                                    $(element).attr('autocomplete', 'off')
+                                    $(element).attr('autocomplete', 'off'),
+                                    $(element).css('text-transform', 'uppercase')
                                 }
 						    }
                         }
@@ -234,6 +229,18 @@
                         page = $(this).jqGrid('getGridParam', 'page') - 1
     	                rows = $(this).jqGrid('getGridParam', 'postData').rows
                         if (indexRow >= rows) indexRow = (indexRow - rows * page)
+
+                        rowId = $(this).jqGrid('getGridParam', 'selrow')
+                        cellVal = $(this).jqGrid('getCell', rowId, 'No. Invoice')
+                        row = $(this).jqGrid('getRowData', rowId, )
+                        invoiceVal = row["Invoice"]
+
+                        sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx
+                        sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord
+                        pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows
+                        pagenum = $('#grid_id').jqGrid('getGridParam', 'postData').page
+                        
+                        $('#grid_detail').jqGrid('setGridParam', {url:`../apidetail.php?&Invoice=${invoiceVal}`}).trigger('reloadGrid');
                     },
                     loadComplete: function() 
                     {
@@ -320,8 +327,6 @@
                       console.log(form.find('#Jeniskelamin').val(jeniskelaminValue.replace('<span class="highlight">', '').replace('</span>', '')));
                       console.log(form.find('#Saldo').val(saldoValue.replace('<span class="highlight">', '').replace('</span>', '')));
                     },
-                    // afterSubmit:callAfterSubmit,
-                    // reloadAfterSubmit:true,
 
                     serializeRowData: function(postData)
                     { 
@@ -334,14 +339,13 @@
                     }
                 }, {
                     recreateForm: true,
-                    // afterSubmit:callAfterSubmit,
-                    // reloadAfterSubmit:true 
                 }),
 
                 $(document).on('click','#clearFilter',function()
                 {
                     currentSearch = undefined
                     $('[id*="gs_"]').val('')
+                    
                     $('#grid_id').jqGrid('setGridParam', {postData: null})
                     $('#grid_id').jqGrid('setGridParam',
                     {
@@ -394,12 +398,20 @@
                 {
                     caption: "Delete",
                     title: "Delete",
-                    id: "deletePenjualan",
+                    id: "delPenjualan",
                     buttonicon: "ui-icon-trash",
                     onClickButton:function()
                     {
-                        activeGrid = undefined
-                        deletePenjualan();
+                        if ($(this).jqGrid('getGridParam','selrow') !== null)
+                        {
+                            activeGrid = undefined
+                            noInvoice = $(this).jqGrid('getGridParam', 'selrow')
+                            confirmDel(noInvoice)
+                        }
+                        else 
+                        {
+                            alert('Select row !')
+                        }
                     }
                 })
 
@@ -520,19 +532,19 @@
                 {
                     caption: ' Detail Penjualan',
                     datatype: 'json',
-                    url: '../apidetail.php',
                     styleUI: 'jQueryUI',
-                    width: 'auto',
+                    width: '850',
                     height: 'auto',
                     pageable: true,
                     sortname: sortName,
                     rowNum: 10,
                     toolbar: [true, "top"],
                     rownumbers: true,
+                    viewrecords: true,
                     autoencode: true,
                     sortable: true,
                     pager : '#jqGridPagerDetail',
-                    colNames: ['ID', 'Nama Barang', 'Qty', 'Harga'],
+                    colNames: ['ID', 'Nama Barang', 'Quantity', 'Harga'],
                     colModel: 
                     [
                         {
@@ -543,48 +555,56 @@
                             editable: true
                         },
                         {
-                            name: 'Harga',
-                            index: 'Harga',
+                            name: 'NamaBarang',
+                            index: 'NamaBarang',
                             sortable: true,
                             editable: true,
-                            editoptions:
-                            {
+                            formatoptions: 
+                            { 
                                 dataInit: function(element) 
                                 {
-                                    $(element).attr('autocomplete', 'off'),
                                     $(element).css('text-transform', 'uppercase')
                                 }
-                            }
+                            },
                         },
                         {
                             name: 'Qty',
                             index: 'Qty',
+                            align: 'right',
                             sortable: true,
-                            editable: true,
-                            editoptions:
+                            formatter: true,
+                            formatoptions:
                             {
-                                dataInit: function(element) 
-                                {
-                                    $(element).attr('autocomplete', 'off'),
-                                    $(element).css('text-transform', 'uppercase')
-                                }
-                            }
+                                thousandsSeparator: ".",
+                                decimalSeparator: ",",
+                                decimalPlaces : 2,
+                                prefix : 'Rp ',  
+                                deaultValue: "Rp 0.00",
+                            },
                         },
                         {
                             name: 'Harga',
                             index: 'Harga',
+                            align: 'right',
                             sortable: true,
                             editable: true,
-                            editoptions:
+                            formatter:'currency',
+                            formatoptions:
                             {
-                                dataInit: function(element) 
-                                {
-                                    $(element).attr('autocomplete', 'off'),
-                                    $(element).css('text-transform', 'uppercase')
-                                }
-                            }
+                                thousandsSeparator: ".",
+                                decimalSeparator: ",",
+                                decimalPlaces : 2,
+                                prefix : 'Rp ',  
+                                deaultValue: "Rp 0.00",
+                            },
                         }
-                    ]
+                    ],
+                    jsonReader: 
+                    {
+                        root: 'data',
+                        id: 'Id',
+                        repeatitems: false
+                    }
                 })
             })
 
@@ -592,7 +612,6 @@
             {
                 $('#add').load('view/create_add.php', function()
                 {
-
                     $.ajax({
                         url : 'datastructure.php',
                         type: 'GET',
@@ -600,30 +619,25 @@
                     })
                     .done (function(res) 
                     {
-                        // res.each(function(element, i)
-                        // {
-                        //     $(`input[name=${element.name}]`).attr('maxlength', element.max_length)
-                        // })
                         let field = res.structure;
-
                     })
                 }).dialog({
                     modal:true,
                     title: "Add Penjualan",
                     height: 'auto',
-                    width: 'auto',
+                    width: '600',
                     position: [0, 0],
                     buttons: {
                         'Save' : function()
                         {
-                            invoice = $('#Invoice').val();
-                            nama = $('#Nama').val();
-                            tgl = $('#Tgl').val();
-                            jeniskelamin = $('#Jeniskelamin').val();
-                            saldo = $('#Saldo').val();
+                            invoice = $('#Invoice').val().toUpperCase();
+                            nama = $('#Nama').val().toUpperCase();;
+                            tgl = $('#Tgl').val().toUpperCase();;
+                            jeniskelamin = $('#Jeniskelamin').val().toUpperCase();;
+                            saldo = $('#Saldo').val().toUpperCase();;
 
                             datanamabarang = [];
-                            namabarang = $(`input[name="Harga[]"]`)
+                            namabarang = $(`input[name="NamaBarang[]"]`)
                             .each(function(index,element)
                             {
                                 datanama = element.value;
@@ -653,7 +667,7 @@
                                 dataType: 'JSON',
                                 data : 
                                 {
-                                    operadd: 'add',
+                                    oper: 'add',
                                     Invoice : invoice, 
                                     Nama : nama,
                                     Tgl : tgl,
@@ -668,7 +682,34 @@
                                 if (data.status == 'submitted') 
                                 {
                                     $('#add').dialog('close');
-                                    callAfterSubmit();
+                                    let invoice = data.invoice;
+
+                                    filters = $('#grid_id').jqGrid('getGridParam').postData.filters;
+                                    globals = $('#grid_id').jqGrid('getGridParam', 'postData').global_search;
+                                    sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx;
+                                    sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord;
+                                    pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows;
+                                    $.ajax({
+                                        url:"aftersave.php",
+                                        dataType: 'JSON',  
+                                        data: 
+                                        {                        
+                                            Invoice: JSON.parse(invoice),
+                                            sidx: sortfield,
+                                            sord: sortorder,
+                                            filter: filters,
+                                            globalsearch: globals,
+                                        }
+                                    }).done(function(data)
+                                    {
+                                        $('#cData').click();
+                                        let posisi = data.position;
+                                        let pager = Math.ceil(posisi / pagesize);
+                                        let rows = posisi - (pager - 1)* pagesize;
+                                        indexRow = rows-1;
+                                        $('#grid_id').trigger('reloadGrid', {page:pager});
+                                    })
+                                    
                                 }
                             })
                         },
@@ -681,34 +722,164 @@
                 })
             }
 
-            function callAfterSubmit()
+            function editPenjualan()
             {
-                filters = $(this).jqGrid('getGridParam').postData.filters;
-                console.log(filters);
+                $('#edit').load(`view/create_edit.php?Invoice=${invoiceVal}`, function()
+                {
+                    $.ajax({
+                        url : 'datastructure.php',
+                        type: 'GET',
+                        dataType: 'JSON'
+                    })
+                    .done (function(res) 
+                    {
+                        let field = res.structure;
+                    })
+                }).dialog({
+                    modal:true,
+                    title: "Edit Penjualan",
+                    height: 'auto',
+                    width: '600',
+                    position: [0, 0],
+                    buttons: {
+                        'Save' : function()
+                        {
+                            invoice = $('#Invoice').val().toUpperCase();
+                            nama = $('#Nama').val().toUpperCase();;
+                            tgl = $('#Tgl').val().toUpperCase();;
+                            jeniskelamin = $('#Jeniskelamin').val().toUpperCase();;
+                            saldo = $('#Saldo').val().toUpperCase();;
 
-                globals = $(this).jqGrid('getGridParam', 'postData').global_search;
-                sortfield = $(this).jqGrid('getGridParam', 'postData').sidx;
-                sortorder = $(this).jqGrid('getGridParam', 'postData').sord;
-                pagesize = $(this).jqGrid('getGridParam', 'postData').rows;
-                $.ajax({
-                    url:"aftersave.php",
-                    dataType: 'JSON',  
-                    data: 
-                    {                        
-                        Invoice: JSON.parse(response.responseText).Invoice,
-                        sidx: sortfield,
-                        sord: sortorder,
-                        filter: filters,
-                        globalsearch: globals,
+                            datanamabarang = [];
+                            namabarang = $(`input[name="NamaBarang[]"]`)
+                            .each(function(index,element)
+                            {
+                                datanama = element.value;
+                                datanamabarang.push(element.value);
+                            })
+
+                            dataqtybarang = [];
+                            qty = $(`input[name="Qty[]"]`)
+                            .each(function(index,element)
+                            {
+                                dataqty = element.value; 
+                                dataqtybarang.push(element.value);
+                            })
+
+                            datahargabarang = [];
+                            harga = $(`input[name="Harga[]"]`)
+                            .each(function(index,element)
+                            {
+                                dataharga = element.value;
+                                datahargabarang.push(element.value);
+                            });
+
+                            $.ajax(
+                            {
+                                url: 'save.php',
+                                type: 'POST',
+                                dataType: 'JSON',
+                                data : 
+                                {
+                                    oper: 'edit',
+                                    Invoice : invoice, 
+                                    Nama : nama,
+                                    Tgl : tgl,
+                                    Jeniskelamin : jeniskelamin,
+                                    Saldo : saldo,
+                                    Namabarang: datanamabarang,
+                                    Qty: dataqtybarang,
+                                    Harga: datahargabarang
+                                },
+                            }).done(function(data)
+                            {
+                                if (data.status == 'submitted') 
+                                {
+                                    $('#edit').dialog('close');
+
+                                    invoice = data.invoice;
+                                    filters = $('#grid_id').jqGrid('getGridParam').postData.filters;
+                                    globals = $('#grid_id').jqGrid('getGridParam', 'postData').global_search;
+                                    sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx;
+                                    sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord;
+                                    pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows;
+                                    $.ajax({
+                                        url:"aftersave.php",
+                                        dataType: 'JSON',  
+                                        data: 
+                                        {           
+                                            Invoice: invoice,
+                                            sidx: sortfield,
+                                            sord: sortorder,
+                                            filter: filters,
+                                            globalsearch: globals,
+                                        }
+                                    }).done(function(data)
+                                    {
+                                        $('#cData').click();
+                                        let posisi = data.position;
+                                        let pager = Math.ceil(posisi / pagesize);
+                                        let rows = posisi - (pager - 1)* pagesize;
+                                        indexRow = rows-1;
+                                        $('#grid_id').trigger('reloadGrid', {page:pager});
+                                    })
+                                }
+                            })
+                        },
+                        'Cancel' : function() 
+                        {
+                            activeGrid = '#grid_id',
+                            $(this).dialog('close')
+                        }
                     }
+                })
+            }
+
+            function confirmDel(noInvoice)
+            {
+                $('#del')
+                .load(`view/create_del.php?Invoice=${invoiceVal}`)
+                .dialog
+                ({
+                    modal:true,
+                    title: "Delete Penjualan",
+                    height: 'auto',
+                    width: '600',
+                    position: [0, 0],
+                    buttons: 
+                    {
+                        'Delete' : function()
+                        {
+                            delPenjualan(noInvoice)
+                        },
+                        'Cancel' : function() 
+                        {
+                            activeGrid = '#grid_id',
+                            $(this).dialog('close')
+                        }
+                    }
+                })
+            }
+            function delPenjualan()
+            {
+                invoice = $('#Invoice').val().toUpperCase();
+                $.ajax(
+                {
+                    url: 'save.php',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data : 
+                    {
+                        oper: 'del',
+                        Invoice : invoice, 
+                    },
                 }).done(function(data)
                 {
-                    $('#cData').click();
-                    let posisi = data.position;
-                    let pager = Math.ceil(posisi / pagesize);
-                    let rows = posisi - (pager - 1)* pagesize;
-                    indexRow = rows-1;
-                    $('#grid_id').trigger('reloadGrid', {page:pager});
+                    if (data.status == 'submitted') 
+                    {
+                        $('#del').dialog('close')
+                        $('#grid_id').trigger('reloadGrid')
+                    }
                 })
             }
 
