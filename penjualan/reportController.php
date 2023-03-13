@@ -4,6 +4,9 @@
     $pagesize = $_GET['rows']; 
     $sortfield = $_GET['sidx']; 
     $sortorder = $_GET['sord']; 
+    // $invoice = $_GET['invoice'];
+    // var_dump($invoice);
+    // die;
 
     Report($connect, $pagenum, $pagesize, $sortorder, $sortfield);
 
@@ -98,6 +101,8 @@
         {
             $sales[]= $data; 
         }
+        var_dump($sales);
+        die;  
         
         $json = json_encode($sales);
         $bytes = file_put_contents("./reports/demo.json", $json);
@@ -148,14 +153,6 @@
                 // designer.renderHtml("content")
                 // designer.report = report
             }
-
-            function afterPrint()
-            {
-                if (confirm('Tutup halaman ?'))
-                {
-                    window.close()
-                }
-            }
         </script>
         <style type="text/css">
             .stiJsViewerPage 
@@ -166,6 +163,5 @@
     </head>
     <body onLoad="Start()" onafterprint="afterPrint()">
         <div id="content"></div>
-        
     </body>
 </html>

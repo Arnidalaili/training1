@@ -133,26 +133,26 @@
                             index: 'Tgl',
                             sortable: true,
                             editable: true,
-                            editoptions:
-                            {
-                                dataInit: function(element) 
-                                {
-                                    $(element).attr('autocomplete', 'off'),
-                                    $(element).css('text-transform', 'uppercase'),
-                                    $(element).datepicker(
-                                        {
-                                            dateFormat: 'dd-mm-yy'
-                                        }
-                                    ),
-                                    $(element).inputmask("date",
-                                        {
-                                            mask: "1-2-y",
-                                            separator: "-",
-                                            alias: "d-m-y"
-                                        }
-                                    )
-                                }
-                            },
+                            // editoptions:
+                            // {
+                            //     dataInit: function(element) 
+                            //     {
+                            //         $(element).attr('autocomplete', 'off'),
+                            //         $(element).css('text-transform', 'uppercase'),
+                            //         $(element).datepicker(
+                            //             {
+                            //                 dateFormat: 'dd-mm-yy'
+                            //             }
+                            //         ),
+                            //         $(element).inputmask("date",
+                            //             {
+                            //                 mask: "1-2-y",
+                            //                 separator: "-",
+                            //                 alias: "d-m-y"
+                            //             }
+                            //         )
+                            //     }
+                            // },
                             formatter: 'date',
                             formatoptions: 
                             { 
@@ -182,21 +182,21 @@
                             sortable: true,
                             align: 'right',
                             editable: true,
-                            editoptions:
-                            {
-                                dataInit: function(element) 
-                                {
-                                    $(element).css('text-transform', 'uppercase'),
-                                    element.style.textAlign = 'right',
-                                    $(element).attr('autocomplete', 'off'),
-                                    new AutoNumeric(element,
-                                    {
-                                        currencySymbol : ' ',
-                                        decimalCharacter : ',',
-                                        digitGroupSeparator : '.'
-                                    })
-                                }
-                            },
+                            // editoptions:
+                            // {
+                            //     dataInit: function(element) 
+                            //     {
+                            //         $(element).css('text-transform', 'uppercase'),
+                            //         element.style.textAlign = 'right',
+                            //         $(element).attr('autocomplete', 'off'),
+                            //         new AutoNumeric(element,
+                            //         {
+                            //             currencySymbol : ' ',
+                            //             decimalCharacter : ',',
+                            //             digitGroupSeparator : '.'
+                            //         })
+                            //     }
+                            // },
                             formatter:'currency',
                             formatoptions:
                             {
@@ -234,11 +234,6 @@
                         cellVal = $(this).jqGrid('getCell', rowId, 'No. Invoice')
                         row = $(this).jqGrid('getRowData', rowId, )
                         invoiceVal = row["Invoice"]
-
-                        sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx
-                        sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord
-                        pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows
-                        pagenum = $('#grid_id').jqGrid('getGridParam', 'postData').page
                         
                         $('#grid_detail').jqGrid('setGridParam', {url:`../apidetail.php?&Invoice=${invoiceVal}`}).trigger('reloadGrid');
                     },
@@ -443,6 +438,8 @@
                                 buttons: {
                                     'Report': function() 
                                     {
+                                        invoice = $('#Invoice').val();
+                                        console.log(invoice);
                                         let start = $(this).find('input[name=start]').val()
                                         let limit = $(this).find('input[name=limit]').val()
                                         let params

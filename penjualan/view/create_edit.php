@@ -76,7 +76,7 @@
                 $querydetail = mysqli_query($connect,"SELECT * from detailpenjualan WHERE Invoice='$Invoice'");
                 while($datadetail = mysqli_fetch_assoc($querydetail))
                 {
-                ?>
+            ?>
                     <tr>
                         <td>
                             <input type="text" name="NamaBarang[]" id="namabarang" class="FormElement ui-widget-content ui-corner-all" required autocomplete="off" value="<?php echo $datadetail['NamaBarang'];?>">
