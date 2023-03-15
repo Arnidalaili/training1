@@ -455,7 +455,7 @@
                                         params += key + "=" + encodeURIComponent(postData[key]);
                                         }
 
-                                        window.open(`reportController.php?${params}&start=${start}&limit=${limit}&sidx=${postData.sidx}&sord=${postData.sord}`)
+                                        window.open(`reportController.php?${params}&start=${start}&limit=${limit}&sidx=${postData.sidx}&sord=${postData.sord}&Invoice=${invoiceVal}`)
                                     },
                                     'Cancel': function() 
                                     {

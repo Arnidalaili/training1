@@ -1,10 +1,10 @@
 {
-  "ReportGuid": "210dfe4e5ce79004ce8155358784eac9",
+  "ReportGuid": "96f7b526abbf082fc62b75a00d6e95e1",
   "ReportName": "Report",
   "ReportAlias": "Report",
-  "ReportFile": "penjualandetail.mrt",
+  "ReportFile": "penjualanDetail.mrt",
   "ReportCreated": "/Date(1627890106000+0700)/",
-  "ReportChanged": "/Date(1678695783000+0700)/",
+  "ReportChanged": "/Date(1678857395000+0700)/",
   "EngineVersion": "EngineV2",
   "CalculationMode": "Interpretation",
   "ReportUnit": "Centimeters",
@@ -21,72 +21,30 @@
     }
   },
   "Dictionary": {
-    "Resources": {
+    "Relations": {
       "0": {
-        "Name": "demo",
-        "Alias": "demo",
-        "Type": "Json",
-        "Image": "3od3xvcL6SqMr8pTHwatjolXi5uCBJj9+OTDB11ZW2l7A36SMhozeAjTLE2G6v66ks3NdK4e+7tNcSA+SZHbStxyDjTGcPVls14Tq4/62nd/FfezFNv7eyPcUpwpeDXTLwfRSosOcmisd/gXCjtBmQVLujS2yt7Vyft5NjWWI9SDbqs3EsWpyiNl24Qg3BTza8X+exJhrufpfEqZc5QaQrc="
-      }
-    },
-    "DataSources": {
-      "0": {
-        "Ident": "StiDataTableSource",
-        "Name": "root",
-        "Alias": "root",
-        "Columns": {
-          "0": {
-            "Name": "Id",
-            "Index": -1,
-            "NameInSource": "Id",
-            "Alias": "Id",
-            "Type": "System.String"
-          },
-          "1": {
-            "Name": "Invoice",
-            "Index": -1,
-            "NameInSource": "Invoice",
-            "Alias": "Invoice",
-            "Type": "System.String"
-          },
-          "2": {
-            "Name": "Jeniskelamin",
-            "Index": -1,
-            "NameInSource": "Jeniskelamin",
-            "Alias": "Jeniskelamin",
-            "Type": "System.String"
-          },
-          "3": {
-            "Name": "Nama",
-            "Index": -1,
-            "NameInSource": "Nama",
-            "Alias": "Nama",
-            "Type": "System.String"
-          },
-          "4": {
-            "Name": "Saldo",
-            "Index": -1,
-            "NameInSource": "Saldo",
-            "Alias": "Saldo",
-            "Type": "System.String"
-          },
-          "5": {
-            "Name": "Tgl",
-            "Index": -1,
-            "NameInSource": "Tgl",
-            "Alias": "Tgl",
-            "Type": "System.String"
-          }
+        "Name": "sales",
+        "ChildColumns": {
+          "0": "relationId"
         },
-        "NameInSource": "demo.root"
-      }
-    },
-    "Databases": {
-      "0": {
-        "Ident": "StiJsonDatabase",
-        "Name": "demo",
-        "Alias": "demo",
-        "PathData": "resource://demo"
+        "ParentColumns": {
+          "0": "relations"
+        },
+        "NameInSource": "sales_relations",
+        "Alias": "sales"
+      },
+      "1": {
+        "Name": "sales",
+        "ChildColumns": {
+          "0": "relationId"
+        },
+        "ParentColumns": {
+          "0": "relations"
+        },
+        "NameInSource": "sales_relations",
+        "Alias": "sales",
+        "ParentSource": "sales",
+        "ChildSource": "sales_relations"
       }
     }
   },
@@ -163,9 +121,20 @@
           }
         },
         "2": {
+          "Ident": "StiHeaderBand",
+          "Name": "HeaderBand1",
+          "ClientRectangle": "0,2.4,19.01,0.8",
+          "ComponentPlacement": "h.ap.Page1",
+          "Interaction": {
+            "Ident": "StiInteraction"
+          },
+          "Border": ";;;;;;;solid:Black",
+          "Brush": "solid:"
+        },
+        "3": {
           "Ident": "StiDataBand",
           "Name": "DataBand1",
-          "ClientRectangle": "0,2.4,19.01,3.4",
+          "ClientRectangle": "0,4,19.01,3.4",
           "ComponentPlacement": "d.Page1",
           "Interaction": {
             "Ident": "StiBandInteraction"
@@ -183,7 +152,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "Nomor invoice"
+                "Value": "Invoice"
               },
               "CanBreak": true,
               "VertAlignment": "Center",
@@ -263,7 +232,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "Jenis Kelamin"
+                "Value": "Jenis Kelamin\r\n"
               },
               "CanBreak": true,
               "VertAlignment": "Center",
@@ -288,7 +257,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{root.Invoice}"
+                "Value": "{sales.Invoice}"
               },
               "VertAlignment": "Center",
               "Font": ";10;;",
@@ -313,7 +282,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{root.Nama}"
+                "Value": "{sales.Nama}"
               },
               "VertAlignment": "Center",
               "Font": ";10;;",
@@ -338,7 +307,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{root.Tgl}"
+                "Value": "{sales.Tgl}"
               },
               "VertAlignment": "Center",
               "Font": ";10;;",
@@ -365,7 +334,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{root.Jeniskelamin}"
+                "Value": "{sales.Jeniskelamin}"
               },
               "VertAlignment": "Center",
               "Font": ";10;;",
@@ -465,7 +434,7 @@
             "12": {
               "Ident": "StiText",
               "Name": "Text2",
-              "Guid": "2aeb09617b92ff4804d4a301163c8bfa",
+              "Guid": "68d9fd4a6cd99d81302902cbb37e10ed",
               "CanGrow": true,
               "GrowToHeight": true,
               "ClientRectangle": "0,2.4,2.8,0.6",
@@ -493,7 +462,7 @@
             "13": {
               "Ident": "StiText",
               "Name": "Text27",
-              "Guid": "260bc14af9252a99d9820003bd6f3b36",
+              "Guid": "20af8360ac6be54042620cc20f3107d0",
               "ClientRectangle": "3,2.4,0.6,0.6",
               "ComponentPlacement": "d.DataBand1",
               "Interaction": {
@@ -512,8 +481,8 @@
             },
             "14": {
               "Ident": "StiText",
-              "Name": "Text29",
-              "Guid": "a2405a0348540f9e9401d5e2761959e5",
+              "Name": "Text31",
+              "Guid": "269efc3da55c23a41341a0d112d14638",
               "CanGrow": true,
               "GrowToHeight": true,
               "ClientRectangle": "3.8,2.4,15.2,0.6",
@@ -522,7 +491,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{root.Saldo}"
+                "Value": "{sales.Saldo}"
               },
               "VertAlignment": "Center",
               "Font": ";10;;",
@@ -541,12 +510,84 @@
               "Type": "DataColumn"
             }
           },
-          "DataSourceName": "root"
+          "DataSourceName": "sales"
         },
-        "3": {
+        "4": {
+          "Ident": "StiFooterBand",
+          "Name": "FooterBand1",
+          "PrintOn": "OnlyLastPage",
+          "ClientRectangle": "0,8.2,19.01,0.8",
+          "ComponentPlacement": "f.Page1",
+          "Interaction": {
+            "Ident": "StiInteraction"
+          },
+          "Border": "Top;174,171,171;;;;;;solid:0,0,0",
+          "Brush": "solid:",
+          "Components": {
+            "0": {
+              "Ident": "StiText",
+              "Name": "Text30",
+              "Guid": "1a7bf5f1eb4544e72aa0db5f77ba0488",
+              "PrintOn": "OnlyLastPage",
+              "ClientRectangle": "14.6,0.2,4.4,0.6",
+              "ComponentPlacement": "f.FooterBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "HorAlignment": "Right",
+              "VertAlignment": "Center",
+              "Font": ";;Bold;",
+              "Border": "Bottom;;;Double;;;;solid:0,0,0",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "Margins": {
+                "Left": 0,
+                "Right": 3,
+                "Top": 0,
+                "Bottom": 0
+              },
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "DecimalSeparator": ",",
+                "DecimalDigits": 0,
+                "GroupSeparator": ".",
+                "PositivePattern": 0
+              },
+              "Type": "Expression"
+            },
+            "1": {
+              "Ident": "StiText",
+              "Name": "Text29",
+              "Guid": "363d1843df26fc45fd54b72491e9d1cc",
+              "PrintOn": "OnlyLastPage",
+              "ClientRectangle": "10.8,0.2,3.8,0.6",
+              "ComponentPlacement": "f.FooterBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "Grand Total"
+              },
+              "VertAlignment": "Center",
+              "Font": ";;Bold;",
+              "Border": "Bottom;;;Double;;;;solid:0,0,0",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "Margins": {
+                "Left": 3,
+                "Right": 0,
+                "Top": 0,
+                "Bottom": 0
+              },
+              "Type": "Expression"
+            }
+          }
+        },
+        "5": {
           "Ident": "StiHeaderBand",
           "Name": "HeaderBand2",
-          "ClientRectangle": "0,6.6,19.01,0.6",
+          "ClientRectangle": "0,9.8,19.01,0.6",
           "ComponentPlacement": "h.ap.Page1",
           "Interaction": {
             "Ident": "StiInteraction"
@@ -566,6 +607,7 @@
               "Text": {
                 "Value": "No"
               },
+              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Font": ";12;Bold;",
               "Border": ";;;;;;;solid:0,0,0",
@@ -592,6 +634,7 @@
               "Text": {
                 "Value": "Item Name"
               },
+              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Font": ";12;Bold;",
               "Border": ";;;;;;;solid:0,0,0",
@@ -616,8 +659,9 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "Qty"
+                "Value": "Qty\r\n"
               },
+              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Font": ";12;Bold;",
               "Border": ";;;;;;;solid:0,0,0",
@@ -635,7 +679,7 @@
               "Ident": "StiText",
               "Name": "Text18",
               "Guid": "da490abe56088d828a68a645f404b1aa",
-              "ClientRectangle": "10.8,0,3.8,0.6",
+              "ClientRectangle": "10.8,0,8.2,0.6",
               "ComponentPlacement": "h.ap.HeaderBand2",
               "ComponentStyle": "Table Header",
               "Interaction": {
@@ -644,32 +688,7 @@
               "Text": {
                 "Value": "Item Price"
               },
-              "VertAlignment": "Center",
-              "Font": ";12;Bold;",
-              "Border": ";;;;;;;solid:0,0,0",
-              "Brush": "solid:156,195,229",
-              "TextBrush": "solid:255,255,255",
-              "Margins": {
-                "Left": 3,
-                "Right": 0,
-                "Top": 0,
-                "Bottom": 0
-              },
-              "Type": "Expression"
-            },
-            "4": {
-              "Ident": "StiText",
-              "Name": "Text19",
-              "Guid": "e12bc84c056264b50270744b2ed79023",
-              "ClientRectangle": "14.6,0,4.4,0.6",
-              "ComponentPlacement": "h.ap.HeaderBand2",
-              "ComponentStyle": "Table Header",
-              "Interaction": {
-                "Ident": "StiInteraction"
-              },
-              "Text": {
-                "Value": "Total Price"
-              },
+              "HorAlignment": "Center",
               "VertAlignment": "Center",
               "Font": ";12;Bold;",
               "Border": ";;;;;;;solid:0,0,0",
@@ -685,10 +704,10 @@
             }
           }
         },
-        "4": {
+        "6": {
           "Ident": "StiDataBand",
           "Name": "DataBand2",
-          "ClientRectangle": "0,8,19.01,0.6",
+          "ClientRectangle": "0,11.2,19.01,0.6",
           "ComponentPlacement": "d.Page1",
           "Interaction": {
             "Ident": "StiBandInteraction"
@@ -737,7 +756,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{customers_relations.item_name}"
+                "Value": "{sales_relations.NamaBarang}"
               },
               "CanBreak": true,
               "VertAlignment": "Center",
@@ -753,7 +772,7 @@
                 "Top": 0,
                 "Bottom": 0
               },
-              "Type": "Expression"
+              "Type": "DataColumn"
             },
             "2": {
               "Ident": "StiText",
@@ -767,7 +786,7 @@
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{customers_relations.item_price}"
+                "Value": "{sales_relations.Qty}"
               },
               "CanBreak": true,
               "HorAlignment": "Right",
@@ -792,7 +811,7 @@
                 "GroupSeparator": ".",
                 "PositivePattern": 0
               },
-              "Type": "Expression"
+              "Type": "DataColumn"
             },
             "3": {
               "Ident": "StiText",
@@ -800,13 +819,13 @@
               "Guid": "39ad86c3c9856ad01a4580e5debd3ef8",
               "CanGrow": true,
               "GrowToHeight": true,
-              "ClientRectangle": "10.8,0,3.8,0.6",
+              "ClientRectangle": "10.8,0,8.2,0.6",
               "ComponentPlacement": "d.DataBand2",
               "Interaction": {
                 "Ident": "StiInteraction"
               },
               "Text": {
-                "Value": "{customers_relations.qty}"
+                "Value": "{sales_relations.Harga}"
               },
               "CanBreak": true,
               "HorAlignment": "Right",
@@ -823,54 +842,16 @@
                 "Top": 0,
                 "Bottom": 0
               },
-              "Type": "Expression"
-            },
-            "4": {
-              "Ident": "StiText",
-              "Name": "Text24",
-              "Guid": "0d0eebbe66b5d476527a651b4eff04b9",
-              "CanGrow": true,
-              "GrowToHeight": true,
-              "ClientRectangle": "14.6,0,4.4,0.6",
-              "ComponentPlacement": "d.DataBand2",
-              "Interaction": {
-                "Ident": "StiInteraction"
-              },
-              "Text": {
-                "Value": "{int.Parse(customers_relations.item_price) * int.Parse(customers_relations.qty)}"
-              },
-              "CanBreak": true,
-              "HorAlignment": "Right",
-              "VertAlignment": "Center",
-              "Border": "All;242,242,242;;;;;;solid:0,0,0",
-              "Brush": "solid:",
-              "TextBrush": "solid:0,0,0",
-              "TextOptions": {
-                "WordWrap": true
-              },
-              "Margins": {
-                "Left": 0,
-                "Right": 3,
-                "Top": 0,
-                "Bottom": 0
-              },
-              "TextFormat": {
-                "Ident": "StiCurrencyFormatService",
-                "NegativePattern": 0,
-                "GroupSeparator": ",",
-                "PositivePattern": 0
-              },
-              "Type": "Expression"
+              "Type": "DataColumn"
             }
           },
-          "DataSourceName": "customers_relations",
-          "DataRelationName": "customers_relations",
+          "DataSourceName": "sales_relations",
           "MasterComponent": "DataBand1"
         },
-        "5": {
+        "7": {
           "Ident": "StiFooterBand",
           "Name": "FooterBand2",
-          "ClientRectangle": "0,9.4,19.01,1",
+          "ClientRectangle": "0,12.6,19.01,1",
           "ComponentPlacement": "f.Page1",
           "Interaction": {
             "Ident": "StiInteraction"
@@ -910,9 +891,6 @@
               "ComponentPlacement": "f.FooterBand2",
               "Interaction": {
                 "Ident": "StiInteraction"
-              },
-              "Text": {
-                "Value": "{Sum(int.Parse(customers_relations.item_price) * int.Parse(customers_relations.qty))}"
               },
               "HorAlignment": "Right",
               "VertAlignment": "Center",
