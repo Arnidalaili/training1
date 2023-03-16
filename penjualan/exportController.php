@@ -98,22 +98,36 @@
             $query .= " LIMIT $start, $limit";  
         }
         
-        $sales = [];  
+        $sales = [];
+        $salesDetail = [];
+        $dataDetail = [];
         $totalquery = mysqli_query($connect, $query); 
-        
         while ($data=mysqli_fetch_assoc($totalquery)) 
         {
-            $sales[]= $data;
+            $data['Tgl'] = date('d-m-Y', strtotime($data['Tgl']));
+            $sales[] = $data;
         }
+        $tempData = [];
+        foreach($sales as $index => $dataSales) 
+        {
+            $queryDetail = "SELECT * FROM detailpenjualan WHERE Invoice = '".$dataSales['Invoice']."'";
+            $totalDetail = mysqli_query($connect, $queryDetail);
+            while ($dataDetail=mysqli_fetch_assoc($totalDetail))
+            {
+                $salesDetail[] = $dataDetail;
+            }
+            $mrtData[] = array_merge($dataSales,$salesDetail);
+            $tempData['sales'] = $mrtData;
+        }
+        $dataTotal = json_encode($tempData);
+        // var_dump($dataTotal);
+        // die;
 
         $arr_az = range('A','Z');
         $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $excel->getActiveSheet();
-        
-        
         foreach ($sales as $index => $sale)
         {
-            
             $invoicedata = $sale["Invoice"];
             $namadata = $sale["Nama"];
             $tgldata = $sale["Tgl"];
@@ -163,44 +177,6 @@
         $xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
         $xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
         $xlsxWriter->save('php://output');
-
-        
-        //$totalsales = count($sales); 
-        // var_dump($sales);
-        // die;
-        // for ($i=0; $i<$totalsales; $i++)
-        // {
-        //     $arr_az = range('A','Z');
-        //     foreach($arr_az as $y) 
-        //     {
-        //         for($x=1; $x<=10; $x++)
-        //         {
-        //             $invoicedata = $sales[$i]["Invoice"];
-        //             $namadata = $sales[$i]["Nama"];
-        //             $tgldata = $sales[$i]["Tgl"];
-        //             $jeniskelamindata = $sales[$i]["Jeniskelamin"];
-        //             $saldodata = $sales[$i]["Saldo"];
-                    
-        //             $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        //             $sheet = $excel->getActiveSheet();
-        //             $sheet->setCellValue($y.$x,$invoicedata);
-        //             $sheet->setCellValue($y.$x,$namadata);
-        //             $sheet->setCellValue($y.$x,$tgldata);
-        //             $sheet->setCellValue($y.$x,$jeniskelamindata);
-        //             $sheet->setCellValue($y.$x,$saldodata);
-
-        //             ob_end_clean();
-        //             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        //             header('Content-Disposition: attachment;filename="filename_' . time() . '.xlsx"');
-        //             header('Cache-Control: max-age=0');
-
-        //             $xlsxWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel, 'Xlsx');
-        //             $xlsxWriter = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
-        //             exit($xlsxWriter->save('php://output'));
-        //         }
-        //     }
-        // }
-        //return $sales;
     }
     require "reports/stireport_config.inc"; 
 ?>
