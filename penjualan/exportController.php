@@ -48,7 +48,7 @@
         
         $arr_az = range('A','Z');
         $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $sheet = $excel->getActiveSheet();
+        $sheet = $excel->getActiveSheet();;
 
         $noBarang = 8;
         $noQty = 8;
@@ -57,6 +57,27 @@
 
         foreach ($sales as $index => $sale)
         {
+            // $for ($i='A', $i!=$$excel->getActiveSheet()->getHighestColumn(), $i++) 
+            // {
+            //     $excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+            // }
+
+            foreach (range('A', $excel->getActiveSheet()->getHighestDataColumn()) as $col) {
+                $excel->getActiveSheet()
+                        ->getColumnDimension($col)
+                        ->setAutoSize(true);
+            } 
+            foreach (range('B', $excel->getActiveSheet()->getHighestDataColumn()) as $col) {
+                $excel->getActiveSheet()
+                        ->getColumnDimension($col)
+                        ->setAutoSize(true);
+            } 
+            foreach (range('C', $excel->getActiveSheet()->getHighestDataColumn()) as $col) {
+                $excel->getActiveSheet()
+                        ->getColumnDimension($col)
+                        ->setAutoSize(true);
+            } 
+
             $invoicedata = $sale["Invoice"];
             $namadata = $sale["Nama"];
             $tgldata = $sale["Tgl"];
@@ -113,7 +134,6 @@
             $sheet->setCellValue('C4',$jeniskelamindata);
             $sheet->setCellValue('C5',$saldodata);
             $sheet->setCellValue('C6',$datakosong);
-            
             $sheet->getStyle('C5',$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
 
             foreach($salesDetail as $index => $detail)
@@ -126,6 +146,8 @@
                 $sheet->setCellValue($arr_az[2].$noHarga++,$hargadata);
                 $sheet->getStyle($arr_az[2].$styleHarga++,$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
             }
+
+            
         }
         ob_end_clean();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

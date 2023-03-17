@@ -68,11 +68,11 @@
     {   
         if ($sortorder == 'desc')  
         {
-            $query  .= " ORDER BY $sortfield DESC"; 
+            $query  .= " ORDER BY $sortfield + Invoice DESC"; 
         }
         else if ($sortorder == 'asc') 
         {
-            $query .= " ORDER BY $sortfield ASC"; 
+            $query .= " ORDER BY $sortfield,Invoice ASC"; 
         }
     }
 
@@ -87,6 +87,7 @@
         $query .= " LIMIT $start, $limit";  
     }
 
+   
     $sales = [];
     $salesDetail = [];
     $dataDetail = [];
@@ -116,6 +117,8 @@
         $tempData['sales'] = $salesDetail;
     }
     $dataTotal = json_encode($tempData);
+    // echo json_encode($query);
+    // die;
     require "reports/stireport_config.inc"; 
 ?>
 

@@ -14,11 +14,11 @@
     {   
         if ($sortorder == 'desc')  
         {
-            $query  .= " ORDER BY $sortfield DESC"; 
+            $query  .= " ORDER BY $sortfield + Invoice DESC"; 
         }
         else if ($sortorder == 'asc') 
         {
-            $query .= " ORDER BY $sortfield ASC"; 
+            $query .= " ORDER BY $sortfield,Invoice ASC"; 
         }
     }
     $pagesquery = mysqli_query($connect, $pages);

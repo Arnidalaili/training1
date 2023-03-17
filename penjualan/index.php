@@ -133,26 +133,6 @@
                             index: 'Tgl',
                             sortable: true,
                             editable: true,
-                            // editoptions:
-                            // {
-                            //     dataInit: function(element) 
-                            //     {
-                            //         $(element).attr('autocomplete', 'off'),
-                            //         $(element).css('text-transform', 'uppercase'),
-                            //         $(element).datepicker(
-                            //             {
-                            //                 dateFormat: 'dd-mm-yy'
-                            //             }
-                            //         ),
-                            //         $(element).inputmask("date",
-                            //             {
-                            //                 mask: "1-2-y",
-                            //                 separator: "-",
-                            //                 alias: "d-m-y"
-                            //             }
-                            //         )
-                            //     }
-                            // },
                             formatter: 'date',
                             formatoptions: 
                             { 

@@ -3,8 +3,11 @@
     $pagenum = $_GET['page']; 
     $pagesize = $_GET['rows']; 
     $sortfield = $_GET['sidx']; 
-    $sortorder = $_GET['sord']; 
+    $sortorder = $_GET['sord'];
+    //$sortcustome = 'Invoice';
     $start = ($pagenum - 1) * $pagesize; 
+    // echo json_encode($sortcustome);
+    // die;
 
     $query = "SELECT * FROM penjualan"; 
     $pages = "SELECT SQL_CALC_FOUND_ROWS * FROM penjualan";
@@ -68,11 +71,11 @@
     {   
         if ($sortorder == 'desc')  
         {
-            $query  .= " ORDER BY $sortfield DESC"; 
+            $query  .= " ORDER BY $sortfield + Invoice DESC"; 
         }
         else if ($sortorder == 'asc') 
         {
-            $query .= " ORDER BY $sortfield ASC"; 
+            $query .= " ORDER BY $sortfield,Invoice ASC"; 
         }
     }
 
