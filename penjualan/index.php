@@ -439,7 +439,6 @@
                                     'Report': function() 
                                     {
                                         invoice = $('#Invoice').val();
-                                        console.log(invoice);
                                         let start = $(this).find('input[name=start]').val()
                                         let limit = $(this).find('input[name=limit]').val()
                                         let params
@@ -475,51 +474,24 @@
                     buttonicon: "ui-icon-document",
                     onClickButton:function()
                     {
-                        $('#export_penjualan')
-                            .html(`
-                                <div class="ui-state-default" style="padding: 5px;">
-                                    <h5> Tentukan Baris </h5>
-                                    
-                                    <label> Dari : </label>
-                                    <input type="text" name="start" value="${$(this).getInd($(this).getGridParam('selrow'))}" class="ui-widget-content ui-corner-all autonumeric" style="padding: 5px; text-transform: uppercase;" max="2" required>
-
-                                    <label> Sampai : </label>
-                                    <input type="text" name="limit" value="${$(this).getGridParam('records')}" class="ui-widget-content ui-corner-all autonumeric" style="padding: 5px; text-transform: uppercase;" max="2" required>
-                                </div>
-                            `)
-                            .dialog({
-                                title: "Penjualan",
-                                height: 'auto',
-                                width: '400', 
-                                position: [0, 0],
-                                buttons: {
-                                    'Export': function() 
-                                    {
-                                        let start = $(this).find('input[name=start]').val()
-                                        let limit = $(this).find('input[name=limit]').val()
-                                        let params
-                                        
-                                        if (parseInt(start) > parseInt(limit)) {
-                                            return alert('Sampai harus lebih besar')
-                                        }
-
-                                        for (var key in postData) {
-                                        if (params != "") {
-                                            params += "&";
-                                        }
-                                        params += key + "=" + encodeURIComponent(postData[key]);
-                                        }
-
-                                        window.open(`exportController.php?${params}&start=${start}&limit=${limit}`)
-                                    },
-                                    'Cancel': function() 
-                                    {
-                                        activeGrid = '#grid_id'
-                                        $(this).dialog('close')
-                                    }
-                                }
-                            })
-                    },
+                        rowId = $(this).jqGrid('getGridParam', 'selrow');
+                        cellVal = $(this).jqGrid('getCell', rowId, 'No. Invoice');
+                        row = $(this).jqGrid('getRowData', rowId, );
+                        invoiceVal = row["Invoice"];
+                        sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx;
+                        sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord;
+                        pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows;
+                        pagenum = $('#grid_id').jqGrid('getGridParam', 'postData').page;
+                        
+                        let params
+                        for (var key in postData) {
+                        if (params != "") {
+                            params += "&";
+                        }
+                        params += key + "=" + encodeURIComponent(postData[key]);
+                        }
+                        window.open(`exportController.php?${params}&sord=${sortorder}&sidx=${sortfield}&rows=${pagesize}&page=${pagenum}&invoice=${invoiceVal}`)
+                    }
                 })
             });
 

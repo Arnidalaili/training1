@@ -100,8 +100,6 @@
     $tempData = [];
     foreach($sales as $index => $dataSales) 
     {
-        // var_dump($index);
-        // die;
         $queryDetail = "SELECT * FROM detailpenjualan WHERE Invoice = '".$dataSales['Invoice']."'";
         $totalDetail = mysqli_query($connect, $queryDetail);
         $numRows = mysqli_num_rows($totalDetail);
@@ -117,8 +115,6 @@
         }
         $tempData['sales'] = $salesDetail;
     }
-    // echo json_encode($tempData);
-    // die;
     $dataTotal = json_encode($tempData);
     require "reports/stireport_config.inc"; 
 ?>

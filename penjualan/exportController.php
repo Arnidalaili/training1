@@ -6,126 +6,55 @@
     $pagesize = $_GET['rows']; 
     $sortfield = $_GET['sidx']; 
     $sortorder = $_GET['sord']; 
+    $invoice = $_GET['invoice'];
     
     
-    Export($connect, $pagenum, $pagesize, $sortorder, $sortfield);
-    
+    Export($connect, $pagenum, $pagesize, $sortorder, $sortfield, $invoice);
 
-    function Export($connect, $pagenum, $pagesize, $sortorder, $sortfield)
+    function Export($connect, $pagenum, $pagesize, $sortorder, $sortfield, $invoice)
     {
-        $query = "SELECT * FROM penjualan";
-        $pages = "SELECT SQL_CALC_FOUND_ROWS * FROM penjualan";
-        $start = $_GET['start'] - 1;
-        $limit = $_GET['limit'] - $start;
-        
-        $filters = [];
-        if(isset($_GET['filters'])) {
-            
-            $filters = json_decode($_GET['filters'], true); 
-            $totalfilters = count($filters['rules']); 
-            
-            if (isset($filters))
-            {
-                for ($i=0; $i<$totalfilters; $i++) 
-                { 
-                    $filterdata = $filters['rules'][$i]["data"]; 
-                    $filterfield = $filters['rules'][$i]["field"]; 
-
-                    if ($filterfield == 'Tgl')  
-                    {
-                        $filterdata = date("Y-m-d", strtotime($filterdata)); 
-                    }
-                    
-                    if ($i == 0) 
-                    {
-                        $query .= " WHERE $filterfield LIKE '%$filterdata%'"; 
-                        $pages .= " WHERE $filterfield LIKE '%$filterdata%'";  
-                    }
-                    else if ($i > 0) 
-                    {
-                        $query .= " AND $filterfield LIKE '%$filterdata%'"; 
-                        $pages .= " AND $filterfield LIKE '%$filterdata%'"; 
-                    }
-                }
-            }
-        }
-        
-        $globalsearch = [];
-        if (isset($_GET['global_search']))
-        {
-            $globalsearch = $_GET['global_search'];
-            if(isset($globalsearch))
-            {
-                $field = ['Invoice', 'Nama', 'Tgl', 'Jeniskelamin', 'Saldo'];
-                for ($i=0; $i<count($field); $i++)
-                {
-                    if ($i == 0)
-                    {
-                        $query .= " WHERE $field[$i] LIKE '%$globalsearch%'";
-                        $pages .= " WHERE $field[$i] LIKE '%$globalsearch%'";
-                    }
-                    else if($i >= 0)
-                    {
-                        $query .= " OR $field[$i] LIKE '%$globalsearch%'";
-                        $pages .= " OR $field[$i] LIKE '%$globalsearch%'";
-                    }
-                }
-            }
-        }
-
-        if (isset($sortfield) && $sortfield != NULL) 
-        {   
-            if ($sortorder == 'desc')  
-            {
-                $query  .= " ORDER BY $sortfield DESC"; 
-            }
-            else if ($sortorder == 'asc') 
-            {
-                $query .= " ORDER BY $sortfield ASC"; 
-            }
-        }
-
-       
-        $pagesquery = mysqli_query($connect, $pages);
-        $sql = "SELECT FOUND_ROWS() AS 'found_rows';";
-        $rows =  mysqli_query($connect, $sql);
-        $rows = mysqli_fetch_assoc($rows);
-        $records = $rows['found_rows']; 
-        
-
-        if (isset($pagenum)) 
-        {
-            $query .= " LIMIT $start, $limit";  
-        }
-        
+        $query = "SELECT * FROM penjualan WHERE Invoice='$invoice'";
         $sales = [];
         $salesDetail = [];
         $dataDetail = [];
         $totalquery = mysqli_query($connect, $query); 
         while ($data=mysqli_fetch_assoc($totalquery)) 
         {
+            
             $data['Tgl'] = date('d-m-Y', strtotime($data['Tgl']));
             $sales[] = $data;
-        }
-        $tempData = [];
-        foreach($sales as $index => $dataSales) 
-        {
-            $queryDetail = "SELECT * FROM detailpenjualan WHERE Invoice = '".$dataSales['Invoice']."'";
-            $totalDetail = mysqli_query($connect, $queryDetail);
-            while ($dataDetail=mysqli_fetch_assoc($totalDetail))
-            {
-                $salesDetail[] = $dataDetail;
-            }
-            $mrtData[] = array_merge($dataSales,$salesDetail);
-            $tempData['sales'] = $mrtData;
-        }
-        $dataTotal = json_encode($tempData);
-        // var_dump($dataTotal);
-        // die;
 
+            $tempData = [];
+            $queryDetail = "SELECT * FROM detailpenjualan WHERE Invoice = '".$data['Invoice']."'";
+            
+            $totalDetail = mysqli_query($connect, $queryDetail);
+            $numRows = mysqli_num_rows($totalDetail);
+            if($numRows != 0)
+            {
+                while ($dataDetail=mysqli_fetch_assoc($totalDetail))
+                {
+                    $salesDetail[] = $dataDetail;
+                    $tempData['sales'] = array_merge($sales,$salesDetail);
+                }
+            }
+            else if ($numRows == 0)
+            {
+                $tempData['sales'] = $sales;
+            }
+        }
+        // echo json_encode($salesDetail);
+        //  die;
+        $dataTotal = json_encode($tempData);
+        
         $arr_az = range('A','Z');
         $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $excel->getActiveSheet();
+
+        $noBarang = 8;
+        $noQty = 8;
+        $noHarga = 8;
+        $styleHarga = 8;
+
         foreach ($sales as $index => $sale)
         {
             $invoicedata = $sale["Invoice"];
@@ -133,41 +62,70 @@
             $tgldata = $sale["Tgl"];
             $jeniskelamindata = $sale["Jeniskelamin"];
             $saldodata = $sale["Saldo"];
+            $datakosong = '';
 
             $styleArray = [
                 'font' => [
                     'bold' => true,
                 ],
                 'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                ],
+            ];
+            $styleArray2 = [
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                ],
+                'font' => [
+                    'bold' => true,
                 ],
             ];
             $sheet->getStyle('A1')->applyFromArray($styleArray);
-            $sheet->getStyle('B1')->applyFromArray($styleArray);
-            $sheet->getStyle('C1')->applyFromArray($styleArray);
-            $sheet->getStyle('D1')->applyFromArray($styleArray);
-            $sheet->getStyle('E1')->applyFromArray($styleArray);
-
+            $sheet->getStyle('A2')->applyFromArray($styleArray);
+            $sheet->getStyle('A3')->applyFromArray($styleArray);
+            $sheet->getStyle('A4')->applyFromArray($styleArray);
+            $sheet->getStyle('A5')->applyFromArray($styleArray);
+            $sheet->getStyle('A6')->applyFromArray($styleArray);
+            $sheet->getStyle('A7')->applyFromArray($styleArray2);
+            $sheet->getStyle('B7')->applyFromArray($styleArray2);
+            $sheet->getStyle('C7')->applyFromArray($styleArray2);
+            
             $sheet->setCellValue('A1','No.Invoice');
-            $sheet->setCellValue('B1','Nama Customer');
-            $sheet->setCellValue('C1','Tanggal Pembelian');
-            $sheet->setCellValue('D1','Jenis Kelamin');
-            $sheet->setCellValue('E1','Saldo');
+            $sheet->setCellValue('A2','Customer Name');
+            $sheet->setCellValue('A3','Date');
+            $sheet->setCellValue('A4','Gender');
+            $sheet->setCellValue('A5','Saldo');
+            $sheet->setCellValue('A6','');
+            $sheet->setCellValue('A7','Item Name');
+            $sheet->setCellValue('B7','Quantity');
+            $sheet->setCellValue('C7','Item Price');
 
-            $styleArray2 = [
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT
-                ],
-            ];
+            $sheet->setCellValue('B1',':');
+            $sheet->setCellValue('B2',':');
+            $sheet->setCellValue('B3',':');
+            $sheet->setCellValue('B4',':');
+            $sheet->setCellValue('B5',':');
+            $sheet->setCellValue('B6','');
+            
+            $sheet->setCellValue('C1',$invoicedata);
+            $sheet->setCellValue('C2',$namadata);
+            $sheet->setCellValue('C3',$tgldata);
+            $sheet->setCellValue('C4',$jeniskelamindata);
+            $sheet->setCellValue('C5',$saldodata);
+            $sheet->setCellValue('C6',$datakosong);
+            
+            $sheet->getStyle('C5',$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
 
-            $sheet->setCellValue($arr_az[0].$index + 2,$invoicedata);
-            $sheet->setCellValue($arr_az[1].$index + 2,$namadata);
-            $sheet->setCellValue($arr_az[2].$index + 2,$tgldata);
-            $sheet->setCellValue($arr_az[3].$index + 2,$jeniskelamindata);
-            $sheet->setCellValue($arr_az[4].$index + 2,$saldodata); 
-
-            $sheet->getStyle($arr_az[0].$index + 2,$invoicedata)->applyFromArray($styleArray2);;
-            $sheet->getStyle($arr_az[4].$index + 2,$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
+            foreach($salesDetail as $index => $detail)
+            {
+                $brgdata = $detail["NamaBarang"];
+                $qtydata = $detail["Qty"];
+                $hargadata = $detail["Harga"];
+                $sheet->setCellValue($arr_az[0].$noBarang++,$brgdata);
+                $sheet->setCellValue($arr_az[1].$noQty++,$qtydata);
+                $sheet->setCellValue($arr_az[2].$noHarga++,$hargadata);
+                $sheet->getStyle($arr_az[2].$styleHarga++,$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
+            }
         }
         ob_end_clean();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

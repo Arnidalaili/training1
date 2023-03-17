@@ -1,12 +1,12 @@
 {
-  "ReportGuid": "ce002453e74823d2cc1a14ff03213c71",
+  "ReportGuid": "2920f9bca287deb7b53c11b3c7673634",
   "ReportName": "Report",
   "ReportAlias": "Simple List",
   "ReportFile": "penjualanDetail.mrt",
   "ReportAuthor": "Stimulsoft",
   "ReportDescription": "This sample demonstrates how to create a simple list report.",
   "ReportCreated": "/Date(1476429177000+0700)/",
-  "ReportChanged": "/Date(1678956462000+0700)/",
+  "ReportChanged": "/Date(1679037939000+0700)/",
   "EngineVersion": "EngineV2",
   "CalculationMode": "Interpretation",
   "ReportUnit": "Centimeters",
@@ -626,7 +626,7 @@
             "16": {
               "Ident": "StiText",
               "Name": "Text19",
-              "ClientRectangle": "1.6,4.8,7,0.8",
+              "ClientRectangle": "1.6,4.8,6.4,0.8",
               "ComponentPlacement": "gh.GroupHeaderBand1",
               "ComponentStyle": "Header2",
               "Interaction": {
@@ -646,7 +646,7 @@
             "17": {
               "Ident": "StiText",
               "Name": "Text20",
-              "ClientRectangle": "8.6,4.8,4.2,0.8",
+              "ClientRectangle": "8,4.8,2.4,0.8",
               "ComponentPlacement": "gh.GroupHeaderBand1",
               "ComponentStyle": "Header2",
               "Interaction": {
@@ -666,7 +666,7 @@
             "18": {
               "Ident": "StiText",
               "Name": "Text21",
-              "ClientRectangle": "12.8,4.8,6.2,0.8",
+              "ClientRectangle": "10.4,4.8,4.4,0.8",
               "ComponentPlacement": "gh.GroupHeaderBand1",
               "ComponentStyle": "Header2",
               "Interaction": {
@@ -682,8 +682,29 @@
               "Brush": "solid:251,229,213",
               "TextBrush": "solid:193,152,89",
               "Type": "Expression"
+            },
+            "19": {
+              "Ident": "StiText",
+              "Name": "Text26",
+              "ClientRectangle": "14.8,4.8,4.2,0.8",
+              "ComponentPlacement": "gh.GroupHeaderBand1",
+              "ComponentStyle": "Header2",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "Total Price"
+              },
+              "HorAlignment": "Center",
+              "VertAlignment": "Center",
+              "Font": ";12;Bold;",
+              "Border": ";193,152,89;;;;;;solid:0,0,0",
+              "Brush": "solid:251,229,213",
+              "TextBrush": "solid:193,152,89",
+              "Type": "Expression"
             }
           },
+          "SortDirection": "None",
           "Condition": {
             "Value": "{sales.Invoice}"
           }
@@ -713,7 +734,7 @@
             "0": {
               "Ident": "StiText",
               "Name": "Text23",
-              "ClientRectangle": "1.6,0,7,0.6",
+              "ClientRectangle": "1.6,0,6.4,0.6",
               "ComponentPlacement": "d.DataBand1",
               "Interaction": {
                 "Ident": "StiInteraction"
@@ -730,7 +751,7 @@
             "1": {
               "Ident": "StiText",
               "Name": "Text24",
-              "ClientRectangle": "8.6,0,4.2,0.6",
+              "ClientRectangle": "8,0,2.4,0.6",
               "ComponentPlacement": "d.DataBand1",
               "Interaction": {
                 "Ident": "StiInteraction"
@@ -748,7 +769,7 @@
             "2": {
               "Ident": "StiText",
               "Name": "Text25",
-              "ClientRectangle": "12.8,0,6.2,0.6",
+              "ClientRectangle": "10.4,0,4.4,0.6",
               "ComponentPlacement": "d.DataBand1",
               "Interaction": {
                 "Ident": "StiInteraction"
@@ -782,13 +803,188 @@
               "Text": {
                 "Value": "{sales.no}"
               },
+              "HorAlignment": "Center",
+              "VertAlignment": "Center",
               "Border": ";;;;;;;solid:Black",
               "Brush": "solid:",
               "TextBrush": "solid:Black",
               "Type": "DataColumn"
+            },
+            "4": {
+              "Ident": "StiText",
+              "Name": "Text27",
+              "Guid": "67e4da653b38a183989eb74e3733eb8a",
+              "ClientRectangle": "14.8,0,4.2,0.6",
+              "ComponentPlacement": "d.DataBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{int.Parse(sales.Harga)*int.Parse(sales.Qty)}"
+              },
+              "HorAlignment": "Right",
+              "VertAlignment": "Center",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "DecimalSeparator": ",",
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "State": "DecimalDigits, DecimalSeparator, GroupSeparator, CurrencySymbol",
+                "PositivePattern": 0,
+                "Symbol": "Rp"
+              },
+              "Type": "Expression"
             }
           },
           "DataSourceName": "sales"
+        },
+        "5": {
+          "Ident": "StiGroupFooterBand",
+          "Name": "GroupFooterBand1",
+          "ClientRectangle": "0,12.2,19,0.8",
+          "ComponentPlacement": "gf.Page1",
+          "Interaction": {
+            "Ident": "StiInteraction"
+          },
+          "Border": ";;;;;;;solid:Black",
+          "Brush": "solid:",
+          "Components": {
+            "0": {
+              "Ident": "StiText",
+              "Name": "Text28",
+              "Guid": "f3ac0ff1ea94b73aa7f74d3f60f9cdd0",
+              "ClientRectangle": "14.8,0,4.2,0.6",
+              "ComponentPlacement": "gf.GroupFooterBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{Sum(int.Parse(sales.Harga)*int.Parse(sales.Qty))}"
+              },
+              "HorAlignment": "Right",
+              "VertAlignment": "Center",
+              "Font": ";9;Bold;",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "DecimalSeparator": ",",
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "State": "DecimalDigits, DecimalSeparator, GroupSeparator, CurrencySymbol",
+                "PositivePattern": 0,
+                "Symbol": "Rp"
+              },
+              "Type": "Expression"
+            },
+            "1": {
+              "Ident": "StiText",
+              "Name": "Text29",
+              "Guid": "e16f9ebb50cb9fb020e1a2113743e4a3",
+              "ClientRectangle": "10.4,0,4.4,0.6",
+              "ComponentPlacement": "gf.GroupFooterBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "Sub Total"
+              },
+              "VertAlignment": "Center",
+              "Font": ";9;Bold;",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "DecimalSeparator": ",",
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "State": "DecimalDigits, DecimalSeparator, GroupSeparator, CurrencySymbol",
+                "PositivePattern": 0,
+                "Symbol": "Rp"
+              },
+              "Type": "Expression"
+            }
+          }
+        },
+        "6": {
+          "Ident": "StiFooterBand",
+          "Name": "FooterBand1",
+          "ClientRectangle": "0,13.8,19,0.8",
+          "ComponentPlacement": "f.Page1",
+          "Interaction": {
+            "Ident": "StiInteraction"
+          },
+          "Border": ";;;;;;;solid:Black",
+          "Brush": "solid:",
+          "Components": {
+            "0": {
+              "Ident": "StiText",
+              "Name": "Text30",
+              "Guid": "75c83546f32a3004079c8921a7a99df0",
+              "ClientRectangle": "10.4,0,4.4,0.6",
+              "ComponentPlacement": "f.FooterBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "Grand Total"
+              },
+              "VertAlignment": "Center",
+              "Font": ";9;Bold;",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "DecimalSeparator": ",",
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "State": "DecimalDigits, DecimalSeparator, GroupSeparator, CurrencySymbol",
+                "PositivePattern": 0,
+                "Symbol": "Rp"
+              },
+              "Type": "Expression"
+            },
+            "1": {
+              "Ident": "StiText",
+              "Name": "Text31",
+              "Guid": "824db4a570b9b04840d69fc759ec9687",
+              "ClientRectangle": "14.8,0,4.2,0.6",
+              "ComponentPlacement": "f.FooterBand1",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{Sum(DataBand1,(int.Parse(sales.Harga))*(int.Parse(sales.Qty)))}"
+              },
+              "HorAlignment": "Right",
+              "VertAlignment": "Center",
+              "Font": ";9;Bold;",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:",
+              "TextBrush": "solid:Black",
+              "TextFormat": {
+                "Ident": "StiCurrencyFormatService",
+                "NegativePattern": 0,
+                "DecimalSeparator": ",",
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "State": "DecimalDigits, DecimalSeparator, GroupSeparator, CurrencySymbol",
+                "PositivePattern": 0,
+                "Symbol": "Rp"
+              },
+              "Type": "Expression"
+            }
+          }
         }
       },
       "PageWidth": 21,
