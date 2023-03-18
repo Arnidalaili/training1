@@ -158,8 +158,8 @@
                 report.dictionary.synchronize()
 
                 viewer.report = report
-                // designer.renderHtml("content")
-                // designer.report = report
+                designer.renderHtml("content")
+                designer.report = report
             }
         </script>
         <style type="text/css">
