@@ -41,10 +41,9 @@
             {
                 $tempData['sales'] = $sales;
             }
+            
         }
-        // echo json_encode($salesDetail);
-        //  die;
-        //$dataTotal = json_encode($tempData);
+        $dataTotal = json_encode($tempData);
         
         $arr_az = range('A','Z');
         $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -56,14 +55,9 @@
         $noTotal = 8;
         $styleHarga = 8;
         $styleTotal = 8;
-
+       
         foreach ($sales as $index => $sale)
         {
-            // $for ($i='A', $i!=$$excel->getActiveSheet()->getHighestColumn(), $i++) 
-            // {
-            //     $excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
-            // }
-
             foreach (range('A', $excel->getActiveSheet()->getHighestDataColumn()) as $col) {
                 $excel->getActiveSheet()
                         ->getColumnDimension($col)
@@ -108,6 +102,20 @@
                     'bold' => true,
                 ],
             ];
+            $styleArray3 = [
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT
+                ],
+                'font' => [
+                    'bold' => true,
+                ],
+            ];
+            $styleArray4 = [
+                
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                ],
+            ];
             $sheet->getStyle('A1')->applyFromArray($styleArray);
             $sheet->getStyle('A2')->applyFromArray($styleArray);
             $sheet->getStyle('A3')->applyFromArray($styleArray);
@@ -130,7 +138,6 @@
             $sheet->setCellValue('C7','Item Price');
             $sheet->setCellValue('D7','Total Price');
 
-
             $sheet->setCellValue('B1',':');
             $sheet->setCellValue('B2',':');
             $sheet->setCellValue('B3',':');
@@ -144,6 +151,7 @@
             $sheet->setCellValue('C4',$jeniskelamindata);
             $sheet->setCellValue('C5',$saldodata);
             $sheet->setCellValue('C6',$datakosong);
+            $sheet->getStyle('C1')->applyFromArray($styleArray4);
             $sheet->getStyle('C5',$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
 
             foreach($salesDetail as $index => $detail)
@@ -151,31 +159,26 @@
                 $brgdata = $detail["NamaBarang"];
                 $qtydata = $detail["Qty"];
                 $hargadata = $detail["Harga"];
-                //$total = 
+
                 $sheet->setCellValue($arr_az[0].$noBarang++,$brgdata);
+                
                 $qtyCell = $arr_az[1].$noQty++;
                 $sheet->setCellValue($qtyCell,$qtydata);
+
                 $hargaCell = $arr_az[2].$noHarga++;
                 $sheet->setCellValue($hargaCell,$hargadata);
                 $sheet->getStyle($arr_az[2].$styleHarga++,$saldodata)->getNumberFormat()->setFormatCode("Rp #,##0.00");
-                //$sheet->setCellValue($arr_az[1].($noQty+2),'Sub Total');
-                // var_dump($hargaCell);
-                // die;
-                //$sumrange = $qtydata * $hargadata; // 500000
-                //{Sum(int.Parse(sales.Harga)*int.Parse(sales.Qty))}
-                //$sumrange = ($arr_az[1].$noQty++,$qtydata) * ($arr_az[2].$noHarga++,$hargadata);
-                // var_dump($sumrange);
-                // die;
-                //'=SUM(' . $sumrange . ')'
-                //$sumrange = '=SUM(' . ($arr_az[1].$noQty++,$qtydata)*($arr_az[2].$noHarga++,$hargadata) . ')';
-                $sheet->setCellValue($arr_az[3].($noTotal++), '='.$qtyCell.'*'.$hargaCell.'');
+            
+                $totalCell = $arr_az[3].($noTotal++);
+                $sheet->setCellValue($totalCell, '='.$qtyCell.'*'.$hargaCell.'');
                 $sheet->getStyle($arr_az[3].$styleTotal++,'='.$qtyCell.'*'.$hargaCell.'')->getNumberFormat()->setFormatCode("Rp #,##0.00");
-
-                $sheet->setCellValue($arr_az[2].($noHarga+2),'Sub Total');
-                $sheet->setCellValue($arr_az[3].($noTotal+2), '=SUM(D8:D9)');
-                
-                //$sheet->getStyle($arr_az[1].($noQty+2))->applyFromArray($styleArray2);
             }
+            $sheet->setCellValue($arr_az[2].($noTotal+1),'Total'); 
+            $sheet->getStyle($arr_az[2].($noTotal+1))->applyFromArray($styleArray);
+
+            $sheet->setCellValue($arr_az[3].($noTotal+1), '=SUM(D8:D'.($noTotal-1).')');
+            $sheet->getStyle($arr_az[3].($noTotal+1))->applyFromArray($styleArray3);
+            $sheet->getStyle($arr_az[3].($noTotal+1))->getNumberFormat()->setFormatCode("Rp #,##0.00");
         }
         ob_end_clean();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

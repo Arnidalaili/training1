@@ -4,10 +4,7 @@
     $pagesize = $_GET['rows']; 
     $sortfield = $_GET['sidx']; 
     $sortorder = $_GET['sord'];
-    //$sortcustome = 'Invoice';
     $start = ($pagenum - 1) * $pagesize; 
-    // echo json_encode($sortcustome);
-    // die;
 
     $query = "SELECT * FROM penjualan"; 
     $pages = "SELECT SQL_CALC_FOUND_ROWS * FROM penjualan";
