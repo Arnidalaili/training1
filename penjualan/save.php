@@ -75,7 +75,7 @@
         else if ($operation == 'edit') 
         {
             $dataheader = mysqli_autocommit($connect, false);
-            //die;
+            
             $sqlheader = mysqli_query($connect,"UPDATE penjualan SET Invoice='$invoice', Nama='$nama', Tgl='$newtgl', Jeniskelamin='$jeniskelamin', Saldo=$saldokoma WHERE Invoice='$invoice'");
             if ($sqlheader == true)
             {

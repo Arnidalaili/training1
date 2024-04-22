@@ -11,6 +11,8 @@
         $Invoice = $_GET['Invoice'];
         $query = mysqli_query($connect,"SELECT * from penjualan WHERE Invoice='$Invoice'");
         $data = mysqli_fetch_assoc($query);
+        // var_dump($data);
+        // die;
         $tgl = $data['Tgl'];
         $newtgl = date("d-m-Y", strtotime($tgl));
     ?>

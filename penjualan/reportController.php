@@ -15,7 +15,7 @@
     {
         $filters = json_decode($_GET['filters'], true); 
         $totalfilters = count($filters['rules']); 
-        if (isset($filters))
+        if (isset($filters)) 
         {
             for ($i=0; $i<$totalfilters; $i++) 
             { 
@@ -117,8 +117,7 @@
         $tempData['sales'] = $salesDetail;
     }
     $dataTotal = json_encode($tempData);
-    // echo json_encode($query);
-    // die;
+    
     require "reports/stireport_config.inc"; 
 ?>
 

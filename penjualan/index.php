@@ -1,11 +1,209 @@
-<?php
-    include 'datastructure.php';
-?>
+<div class="modal modal-fullscreen" id="crudModal" data-keyboard="false" tabindex="-1" aria-labelledby="crudModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" id="crudForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title" id="crudModalTitle"></p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="overflow-y: auto;">
+          <div id="jurnalHeaderGroup">
+            <div class="row form-group">
+                <div class="col-12 col-sm-3 col-md-2">
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="id" class="form-control" readonly hidden>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  No. Bukti <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="nobukti" class="form-control ">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Tanggal Bukti <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="invoicedate" class="form-control" data-uppercase="false" id="invoicedate">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Customer <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                
+                <input type="hidden" name="customer_id">
+                <input type="text" name="customer_name" id="customer_name" class="form-control customer-lookup">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  No PO
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="nopo" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Ship To
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" id="shipto" name="shipto" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Rate
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="rate" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  FOB
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="fob" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Terms
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="terms" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Fiscal Rate
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="fiscalrate" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Ship Date <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="shipdate" class="form-control" data-uppercase="false">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Ship Via <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="shipvia" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Receivable Account
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                <input type="text" name="receivableaccount" class="form-control">
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-12 col-sm-3 col-md-2">
+                <label class="col-form-label">
+                  Sales <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="col-12 col-sm-9 col-md-10">
+                
+                <input type="hidden" name="sales_id">
+                <input type="text" name="sales_name" id="sales_name" class="form-control sales-lookup">
+              </div>
+            </div>
+          </div>
+          <div id="jurnalDetailGroup" style="max-height:200px; overflow: auto;">
+            <table class="table table-bordered w-100" id="detailData" overflow = "auto" max-height="300px">
+              <thead>
+                <tr>
+                  <th class="wider" style="width: 100px; min-width: 100px;">NO</th>
+                  <th style="width: 100px; min-width: 100px;">Item</th>
+                  <th style="width: 225px; min-width: 225px;">Item Description</th>
+                  <th class="wider-qty" style="width: 150px; min-width: 150px;">Qty</th>
+                  <th style="width: 200px; min-width: 200px;">Harga Satuan</th>
+                  <th style="width: 200px; min-width: 200px;">Amount</th>
+                  <th class="wider-aksi" id="aksi">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="form-group" id="table_body">
+
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4"></td>
+                  <td>
+                    <p class="text-right font-weight-bold">TOTAL:</p>
+                  </td>
+                  <td>
+                    <p class="text-right font-weight-bold autonumeric" id="total"></p>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary btn-add-row" id="addRow">Tambah</button>
+                  </td>
+                </tr>
+
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-start">
+          <button type="submit" id="btnSubmit" class="btn btn-primary">
+            <i class="fa fa-check"></i>
+            Save
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fa fa-times"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!DOCTYPE html>
 <html lang="en">
     
     <head>
+        <link rel="stylesheet" href="../bootstrap-4.0.0/dist/css/bootstrap.css">
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +231,33 @@
         * {
 			font-size: 12px;
 		}
+
+        #crudModal .modal-dialog {
+            max-width: 100%;
+            margin: 0;
+            height: 100%;
+        }
+
+        #crudModal .modal-content {
+            height: 100%;
+            border: 0;
+            border-radius: 0;
+            background-color: #F5F5F5;
+        }
+
+        #crudModal .modal-header {
+            height: 30px; 
+        }
+
+        #crudModal .modal-footer {
+            height: 56px; 
+        }
+
+        #crudModal .modal-body {
+            overflow-y: auto;
+            max-height: calc(100vh - 86px); 
+        }
+
 
 	    </style>
 
@@ -69,13 +294,14 @@
                     datatype: 'json',
                     url: '../api.php',
                     styleUI: 'jQueryUI',
-                    width: 850,
-                    height: 'auto',
+                    rowNum: 10,
+                    rowList : [10,20,30],
+                    width: '850',
+                    height: '255',
                     pageable: true,
                     viewrecords: true,
                     ignoreCase: true,
                     sortname: sortName,
-                    rowNum: 10,
                     toolbar: [true, "top"],
                     rownumbers: true,
                     autoencode: true,
@@ -162,21 +388,6 @@
                             sortable: true,
                             align: 'right',
                             editable: true,
-                            // editoptions:
-                            // {
-                            //     dataInit: function(element) 
-                            //     {
-                            //         $(element).css('text-transform', 'uppercase'),
-                            //         element.style.textAlign = 'right',
-                            //         $(element).attr('autocomplete', 'off'),
-                            //         new AutoNumeric(element,
-                            //         {
-                            //             currencySymbol : ' ',
-                            //             decimalCharacter : ',',
-                            //             digitGroupSeparator : '.'
-                            //         })
-                            //     }
-                            // },
                             formatter:'currency',
                             formatoptions:
                             {
@@ -214,6 +425,7 @@
                         cellVal = $(this).jqGrid('getCell', rowId, 'No. Invoice')
                         row = $(this).jqGrid('getRowData', rowId, )
                         invoiceVal = row["Invoice"]
+            
                         
                         $('#grid_detail').jqGrid('setGridParam', {url:`../apidetail.php?&Invoice=${invoiceVal}`}).trigger('reloadGrid');
                     },
@@ -282,6 +494,7 @@
                     defaultSearch: 'cn', 
                     groupOp: 'AND',
                 }),
+                
                 jQuery("#grid_id").jqGrid('navGrid', '#jqGridPager', 
                 {add:false, edit:false, del:false, search:false,refresh:false},
                 {
@@ -559,116 +772,136 @@
 
             function addPenjualan()
             {
-                $('#add').load('view/create_add.php', function()
-                {
-                    $.ajax({
-                        url : 'datastructure.php',
-                        type: 'GET',
-                        dataType: 'JSON'
-                    })
-                    .done (function(res) 
-                    {
-                        let field = res.structure;
-                    })
-                }).dialog({
-                    modal:true,
-                    title: "Add Penjualan",
-                    height: 'auto',
-                    width: '600',
-                    position: [0, 0],
-                    buttons: {
-                        'Save' : function()
-                        {
-                            invoice = $('#Invoice').val().toUpperCase();
-                            nama = $('#Nama').val().toUpperCase();;
-                            tgl = $('#Tgl').val().toUpperCase();;
-                            jeniskelamin = $('#Jeniskelamin').val().toUpperCase();;
-                            saldo = $('#Saldo').val().toUpperCase();;
+                let modal = $('#crudModal')
+                let form = modal.find('form')
+                form.trigger('reset')
+                // form.find('#btnSubmit').html('<i class="fa fa-check"></i> Save')
+                modal.find('form').data('action', 'add')
+                modal.find('#crudModalTitle').text('Add Faktur Penjualan')
+                form.find('.is-invalid').removeClass('is-invalid')
+                form.find('.invalid-feedback').remove()
 
-                            datanamabarang = [];
-                            namabarang = $(`input[name="NamaBarang[]"]`)
-                            .each(function(index,element)
-                            {
-                                datanama = element.value;
-                                datanamabarang.push(element.value);
-                            })
-
-                            dataqtybarang = [];
-                            qty = $(`input[name="Qty[]"]`)
-                            .each(function(index,element)
-                            {
-                                dataqty = element.value; 
-                                dataqtybarang.push(element.value);
-                            })
-
-                            datahargabarang = [];
-                            harga = $(`input[name="Harga[]"]`)
-                            .each(function(index,element)
-                            {
-                                dataharga = element.value;
-                                datahargabarang.push(element.value);
-                            });
-
-                            $.ajax(
-                            {
-                                url: 'save.php',
-                                type: 'POST',
-                                dataType: 'JSON',
-                                data : 
-                                {
-                                    oper: 'add',
-                                    Invoice : invoice, 
-                                    Nama : nama,
-                                    Tgl : tgl,
-                                    Jeniskelamin : jeniskelamin,
-                                    Saldo : saldo,
-                                    Namabarang: datanamabarang,
-                                    Qty: dataqtybarang,
-                                    Harga: datahargabarang
-                                },
-                            }).done(function(data)
-                            {
-                                if (data.status == 'submitted') 
-                                {
-                                    $('#add').dialog('close');
-                                    let invoice = data.invoice;
-
-                                    filters = $('#grid_id').jqGrid('getGridParam').postData.filters;
-                                    globals = $('#grid_id').jqGrid('getGridParam', 'postData').global_search;
-                                    sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx;
-                                    sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord;
-                                    pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows;
-                                    $.ajax({
-                                        url:"aftersave.php",
-                                        dataType: 'JSON',  
-                                        data: 
-                                        {                        
-                                            Invoice: JSON.parse(invoice),
-                                            sidx: sortfield,
-                                            sord: sortorder,
-                                            filter: filters,
-                                            globalsearch: globals,
-                                        }
-                                    }).done(function(data)
-                                    {
-                                        $('#cData').click();
-                                        let posisi = data.position;
-                                        let pager = Math.ceil(posisi / pagesize);
-                                        let rows = posisi - (pager - 1)* pagesize;
-                                        indexRow = rows-1;
-                                        $('#grid_id').trigger('reloadGrid', {page:pager});
-                                    })
-                                    
-                                }
-                            })
-                        },
-                        'Cancel' : function() 
-                        {
-                            activeGrid = '#grid_id',
-                            $(this).dialog('close')
-                        }
-                    }
+                Promise.all([
+                ])
+                .then(() => {
+                    modal.modal('show')
                 })
+                .catch((error) => {
+                    showDialog(error.statusText)
+                })
+                .finally(() => {
+                    $('.modal-loader').addClass('d-none')
+                })
+                // $('#add').load('view/create_add.php', function()
+                // {
+                //     $.ajax({
+                //         url : 'datastructure.php',
+                //         type: 'GET',
+                //         dataType: 'JSON'
+                //     })
+                //     .done (function(res) 
+                //     {
+                //         let field = res.structure;
+                //     })
+                // }).dialog({
+                //     modal:true,
+                //     title: "Add Penjualan",
+                //     height: 'auto',
+                //     width: '600',
+                //     position: [0, 0],
+                //     buttons: {
+                //         'Save' : function()
+                //         {
+                //             invoice = $('#Invoice').val().toUpperCase();
+                //             nama = $('#Nama').val().toUpperCase();;
+                //             tgl = $('#Tgl').val().toUpperCase();;
+                //             jeniskelamin = $('#Jeniskelamin').val().toUpperCase();;
+                //             saldo = $('#Saldo').val().toUpperCase();;
+
+                //             datanamabarang = [];
+                //             namabarang = $(`input[name="NamaBarang[]"]`)
+                //             .each(function(index,element)
+                //             {
+                //                 datanama = element.value;
+                //                 datanamabarang.push(element.value);
+                //             })
+
+                //             dataqtybarang = [];
+                //             qty = $(`input[name="Qty[]"]`)
+                //             .each(function(index,element)
+                //             {
+                //                 dataqty = element.value; 
+                //                 dataqtybarang.push(element.value);
+                //             })
+
+                //             datahargabarang = [];
+                //             harga = $(`input[name="Harga[]"]`)
+                //             .each(function(index,element)
+                //             {
+                //                 dataharga = element.value;
+                //                 datahargabarang.push(element.value);
+                //             });
+
+                //             $.ajax(
+                //             {
+                //                 url: 'save.php',
+                //                 type: 'POST',
+                //                 dataType: 'JSON',
+                //                 data : 
+                //                 {
+                //                     oper: 'add',
+                //                     Invoice : invoice, 
+                //                     Nama : nama,
+                //                     Tgl : tgl,
+                //                     Jeniskelamin : jeniskelamin,
+                //                     Saldo : saldo,
+                //                     Namabarang: datanamabarang,
+                //                     Qty: dataqtybarang,
+                //                     Harga: datahargabarang
+                //                 },
+                //             }).done(function(data)
+                //             {
+                //                 if (data.status == 'submitted') 
+                //                 {
+                //                     $('#add').dialog('close');
+                //                     let invoice = data.invoice;
+
+                //                     filters = $('#grid_id').jqGrid('getGridParam').postData.filters;
+                //                     globals = $('#grid_id').jqGrid('getGridParam', 'postData').global_search;
+                //                     sortfield = $('#grid_id').jqGrid('getGridParam', 'postData').sidx;
+                //                     sortorder = $('#grid_id').jqGrid('getGridParam', 'postData').sord;
+                //                     pagesize = $('#grid_id').jqGrid('getGridParam', 'postData').rows;
+                //                     $.ajax({
+                //                         url:"aftersave.php",
+                //                         dataType: 'JSON',  
+                //                         data: 
+                //                         {                        
+                //                             Invoice: JSON.parse(invoice),
+                //                             sidx: sortfield,
+                //                             sord: sortorder,
+                //                             filter: filters,
+                //                             globalsearch: globals,
+                //                         }
+                //                     }).done(function(data)
+                //                     {
+                //                         $('#cData').click();
+                //                         let posisi = data.position;
+                //                         let pager = Math.ceil(posisi / pagesize);
+                //                         let rows = posisi - (pager - 1)* pagesize;
+                //                         indexRow = rows-1;
+                //                         $('#grid_id').trigger('reloadGrid', {page:pager});
+                //                     })
+                                    
+                //                 }
+                //             })
+                //         },
+                //         'Cancel' : function() 
+                //         {
+                //             activeGrid = '#grid_id',
+                //             $(this).dialog('close')
+                //         }
+                //     }
+                // })
             }
 
             function editPenjualan()
@@ -992,5 +1225,9 @@
                 });
             }
         </script>
+
+        <!-- <script src="path/to/jquery/jquery.js"></script> -->
+        <!-- Tambahkan script JavaScript Bootstrap -->
+        <script src="../bootstrap-4.0.0/dist/js/bootstrap.js"></script>
     </body>
 </html>
